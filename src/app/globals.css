@@ -1,1 +1,13 @@
 @import "tailwindcss";
+
+@keyframes floatCard {
+  0% {
+    transform: translateY(0px) translateZ(0px);
+  }
+  50% {
+    transform: translateY(-25px) translateZ(15px);
+  }
+  100% {
+    transform: translateY(0px) translateZ(0px);
+  }
+}
