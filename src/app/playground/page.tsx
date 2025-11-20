@@ -20,26 +20,24 @@ export default function PlaygroundPage() {
       <BackgroundEffects />
 
       <div
-        className="relative z-10 mx-auto"
+        className="relative z-10 mx-auto px-4 sm:px-6 lg:px-8"
         style={{
-          width: "92%",
+          width: "100%",
           maxWidth: "1400px",
-          paddingLeft: "clamp(1.5rem, 4vw, 2.5rem)",
-          paddingRight: "clamp(1.5rem, 4vw, 2.5rem)",
         }}
       >
         <Header />
         
-        <section className="py-12 lg:py-20">
-          <div className="max-w-4xl mx-auto text-center space-y-6">
+        <section className="py-8 sm:py-12 lg:py-20">
+          <div className="max-w-4xl mx-auto text-center space-y-4 sm:space-y-6">
             <div className="flex items-center justify-center gap-2">
               <span className="text-purple-500">[</span>
-              <p className="text-gray-200 font-medium">Playground interactivo</p>
+              <p className="text-gray-200 font-medium text-sm sm:text-base">Playground interactivo</p>
               <span className="text-purple-500">]</span>
             </div>
 
             <h1
-              className="text-4xl sm:text-5xl lg:text-[3.5rem] font-semibold text-white"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-[3.5rem] font-semibold text-white px-4"
               style={{ lineHeight: "1.1" }}
             >
               Prueba Arka CDN
@@ -53,7 +51,7 @@ export default function PlaygroundPage() {
             </h1>
 
             <p
-              className="text-base lg:text-lg text-slate-400 leading-relaxed max-w-2xl mx-auto"
+              className="text-sm sm:text-base lg:text-lg text-slate-400 leading-relaxed max-w-2xl mx-auto px-4"
               style={{ lineHeight: "1.7" }}
             >
               Sube archivos, explora transacciones blockchain y experimenta con el almacenamiento
