@@ -28,10 +28,12 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { RequestResponseViewer } from '@/components/common/RequestResponseViewer';
+import { useI18n } from '@/i18n/I18nProvider';
 
 const MAX_FILE_SIZE = 50 * 1024 * 1024;
 
 export const PersonalFilesManager = () => {
+  const { t } = useI18n();
   const [latestRequestResponse, setLatestRequestResponse] = useState<RequestResponseData | null>(null);
   const [personalClient] = useState(() => {
     const c = new ArkaCDNClient(undefined, 'user', (data) => {
@@ -113,11 +115,11 @@ export const PersonalFilesManager = () => {
       setFiles(response.data || []);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      setError(err.message || 'Error al cargar archivos');
+      setError(err.message || t('playground.personalFiles.errors.loadError'));
     } finally {
       setLoading(false);
     }
-  }, [personalClient, isAuthenticated]);
+  }, [personalClient, isAuthenticated, t]);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -147,7 +149,7 @@ export const PersonalFilesManager = () => {
     if (!file) return;
 
     if (file.size > MAX_FILE_SIZE) {
-      setError(`El archivo es demasiado grande. Tamaño máximo: 50MB`);
+      setError(t('playground.personalFiles.errors.fileTooLarge'));
       return;
     }
 
@@ -183,7 +185,7 @@ export const PersonalFilesManager = () => {
       await loadPersonalFiles();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      setError(err.message || 'Error al subir el archivo');
+      setError(err.message || t('playground.personalFiles.errors.uploadError'));
     } finally {
       setIsUploading(false);
       setUploadProgress(0);
@@ -191,7 +193,7 @@ export const PersonalFilesManager = () => {
   };
 
   const handleDelete = async (fileId: string) => {
-    if (!confirm('¿Estás seguro de que deseas eliminar este archivo?')) return;
+    if (!confirm(t('playground.personalFiles.myFiles.deleteConfirm'))) return;
 
     setDeletingFileId(fileId);
     try {
@@ -199,7 +201,7 @@ export const PersonalFilesManager = () => {
       await loadPersonalFiles();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      setError(err.message || 'Error al eliminar el archivo');
+      setError(err.message || t('playground.personalFiles.errors.deleteError'));
     } finally {
       setDeletingFileId(null);
     }
@@ -207,7 +209,7 @@ export const PersonalFilesManager = () => {
 
   const handleUploadPlainText = async () => {
     if (!plainTextData.trim() || !plainTextFilename.trim()) {
-      setError('Por favor, ingresa datos y un nombre de archivo');
+      setError(t('playground.personalFiles.errors.required'));
       return;
     }
 
@@ -221,7 +223,7 @@ export const PersonalFilesManager = () => {
         try {
           dataToUpload = JSON.parse(plainTextData);
         } catch {
-          throw new Error('El JSON no es válido');
+          throw new Error(t('playground.personalFiles.errors.invalidJson'));
         }
       }
 
@@ -238,7 +240,7 @@ export const PersonalFilesManager = () => {
       await loadPersonalFiles();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      setError(err.message || 'Error al subir el texto');
+      setError(err.message || t('playground.personalFiles.errors.textError'));
     } finally {
       setIsUploading(false);
       setUploadProgress(0);
@@ -261,7 +263,7 @@ export const PersonalFilesManager = () => {
       }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      setError(err.message || 'Error al cargar el contenido');
+      setError(err.message || t('playground.personalFiles.errors.contentError'));
       setViewingFileContent(null);
     } finally {
       setLoadingContent(false);
@@ -274,7 +276,7 @@ export const PersonalFilesManager = () => {
       setUploadStatus({ fileId, status: status.data });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      setError(err.message || 'Error al cargar el estado');
+      setError(err.message || t('playground.personalFiles.errors.statusError'));
     }
   };
 
@@ -286,11 +288,11 @@ export const PersonalFilesManager = () => {
       if (stats.data && stats.data.queues && Array.isArray(stats.data.queues)) {
         setPoolStats(stats.data);
       } else {
-        throw new Error('La respuesta de estadísticas no tiene el formato esperado');
+        throw new Error(t('playground.personalFiles.errors.statsFormatError'));
       }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      setError(err.message || 'Error al cargar estadísticas');
+      setError(err.message || t('playground.personalFiles.errors.statsError'));
       setPoolStats(null);
     } finally {
       setLoadingStats(false);
@@ -307,7 +309,8 @@ export const PersonalFilesManager = () => {
 
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
-    return new Intl.DateTimeFormat('es-ES', {
+    const language = t('playground.personalFiles.myFiles.uploaded') === 'Subido' ? 'es-ES' : 'en-US';
+    return new Intl.DateTimeFormat(language, {
       day: '2-digit',
       month: 'short',
       year: 'numeric',
@@ -341,28 +344,28 @@ export const PersonalFilesManager = () => {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-purple-900/30 border border-purple-700/40 rounded-full text-xs mb-4">
-              <span className="text-purple-400">Personal</span>
+              <span className="text-purple-400">{t('playground.personalFiles.badge')}</span>
             </div>
             <h2 className="text-4xl lg:text-5xl font-semibold text-white mb-4">
-              Administra tus archivos
+              {t('playground.personalFiles.title')}
             </h2>
             <p className="text-lg text-slate-400">
-              Inicia sesión con tu cuenta personal para gestionar tus archivos
+              {t('playground.personalFiles.description')}
             </p>
           </div>
 
           <div className="backdrop-blur-sm rounded-2xl border border-purple-700/30 bg-gradient-to-br from-purple-900/20 to-purple-800/10 p-8 lg:p-12 text-center shadow-2xl shadow-purple-900/20">
             <User className="w-16 h-16 text-purple-400 mx-auto mb-4 opacity-50" />
-            <p className="text-purple-300 text-lg mb-4">No has iniciado sesión</p>
+            <p className="text-purple-300 text-lg mb-4">{t('playground.personalFiles.notLoggedIn')}</p>
             <p className="text-slate-400 text-sm mb-6">
-              Para administrar tus archivos personales, necesitas iniciar sesión con tu cuenta.
+              {t('playground.personalFiles.notLoggedInDesc')}
             </p>
             <a
               href="/login?redirect=/dashboard"
               className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-700 to-purple-600 text-white rounded-xl font-medium hover:from-purple-600 hover:to-purple-500 transition-all shadow-lg shadow-purple-700/30 hover:shadow-purple-700/40"
             >
               <User className="w-5 h-5" />
-              Iniciar sesión
+              {t('playground.personalFiles.login')}
             </a>
           </div>
         </div>
@@ -381,7 +384,7 @@ export const PersonalFilesManager = () => {
                 <User className="w-6 h-6 text-purple-400" />
               </div>
               <div>
-                <p className="text-white font-medium">{userProfile?.name || 'Usuario'}</p>
+                <p className="text-white font-medium">{userProfile?.name || t('playground.personalFiles.user')}</p>
                 <p className="text-purple-300 text-sm">{userProfile?.email}</p>
               </div>
             </div>
@@ -391,14 +394,14 @@ export const PersonalFilesManager = () => {
                 className="cursor-pointer px-4 py-2 bg-purple-900/30 text-white rounded-lg text-sm font-medium hover:bg-purple-900/50 transition-all flex items-center gap-2 border border-purple-700/30"
               >
                 {showTokens ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                {showTokens ? 'Ocultar' : 'Ver'} claves
+                {showTokens ? t('playground.personalFiles.hideKeys') : t('playground.personalFiles.showKeys')} {t('playground.personalFiles.keys')}
               </button>
               <button
                 onClick={handleLogout}
                 className="cursor-pointer px-4 py-2 bg-red-900/30 text-red-300 rounded-lg text-sm font-medium hover:bg-red-900/50 transition-all flex items-center gap-2 border border-red-700/50"
               >
                 <LogOut className="w-4 h-4" />
-                Cerrar sesión
+                {t('playground.personalFiles.logout')}
               </button>
             </div>
           </div>
@@ -407,22 +410,22 @@ export const PersonalFilesManager = () => {
             <div className="mt-6 pt-6 border-t border-purple-700/30 space-y-4 animate-fade-in">
               <div className="flex items-center gap-2 mb-3">
                 <Key className="w-5 h-5 text-purple-400" />
-                <p className="text-white font-medium">Claves de acceso</p>
+                <p className="text-white font-medium">{t('playground.personalFiles.accessKeys')}</p>
               </div>
               <div className="space-y-3">
                 <div>
-                  <p className="text-xs text-purple-300 mb-2">Access Token</p>
+                  <p className="text-xs text-purple-300 mb-2">{t('playground.personalFiles.accessToken')}</p>
                   <div className="bg-purple-950/50 rounded-lg p-3 border border-purple-800/30">
                     <p className="text-purple-400 text-xs break-all font-mono">
-                      {tokens.accessToken || 'No disponible'}
+                      {tokens.accessToken || t('playground.personalFiles.notAvailable')}
                     </p>
                   </div>
                 </div>
                 <div>
-                  <p className="text-xs text-purple-300 mb-2">Refresh Token</p>
+                  <p className="text-xs text-purple-300 mb-2">{t('playground.personalFiles.refreshToken')}</p>
                   <div className="bg-purple-950/50 rounded-lg p-3 border border-purple-800/30">
                     <p className="text-purple-400 text-xs break-all font-mono">
-                      {tokens.refreshToken || 'No disponible'}
+                      {tokens.refreshToken || t('playground.personalFiles.notAvailable')}
                     </p>
                   </div>
                 </div>
@@ -435,7 +438,7 @@ export const PersonalFilesManager = () => {
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-xl font-semibold text-white flex items-center gap-2">
               <UploadCloud className="w-5 h-5 text-purple-400" />
-              Subir archivo personal
+              {t('playground.personalFiles.upload.title')}
             </h3>
             <button
               onClick={loadPoolStats}
@@ -443,7 +446,7 @@ export const PersonalFilesManager = () => {
               className="cursor-pointer px-4 py-2 bg-purple-900/30 text-white rounded-lg text-sm font-medium hover:bg-purple-900/50 transition-all flex items-center gap-2 disabled:opacity-50 border border-purple-700/30"
             >
               <BarChart3 className={`w-4 h-4 ${loadingStats ? 'animate-spin' : ''}`} />
-              Estadísticas
+              {t('playground.personalFiles.upload.stats')}
             </button>
           </div>
 
@@ -462,7 +465,7 @@ export const PersonalFilesManager = () => {
             >
               <div className="flex items-center gap-2">
                 <File className="w-4 h-4" />
-                Subir archivo
+                {t('playground.personalFiles.upload.uploadFile')}
               </div>
             </button>
             <button
@@ -479,7 +482,7 @@ export const PersonalFilesManager = () => {
             >
               <div className="cursor-pointer flex items-center gap-2">
                 <FileText className="w-4 h-4" />
-                Texto/JSON
+                {t('playground.personalFiles.upload.textJson')}
               </div>
             </button>
           </div>
@@ -508,7 +511,7 @@ export const PersonalFilesManager = () => {
                     setError(null);
                     setUploadResult(null);
                   } else if (file) {
-                    setError(`El archivo es demasiado grande. Tamaño máximo: 50MB`);
+                    setError(t('playground.personalFiles.errors.fileTooLarge'));
                   }
                 }}
               >
@@ -518,7 +521,7 @@ export const PersonalFilesManager = () => {
                       <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-purple-400"></div>
                     </div>
                     <div className="space-y-2">
-                      <p className="text-white font-medium">Subiendo archivo...</p>
+                      <p className="text-white font-medium">{t('playground.personalFiles.upload.uploading')}</p>
                       <div className="w-full bg-purple-900/30 rounded-full h-3 overflow-hidden">
                         <div
                           className="bg-gradient-to-r from-purple-500 to-purple-600 h-full transition-all duration-300"
@@ -532,7 +535,7 @@ export const PersonalFilesManager = () => {
                   <div className="space-y-4">
                     <div className="flex items-center justify-center gap-3 text-green-400">
                       <CheckCircle2 className="w-8 h-8" />
-                      <span className="text-lg font-medium">Archivo seleccionado</span>
+                      <span className="text-lg font-medium">{t('playground.personalFiles.upload.fileSelected')}</span>
                     </div>
                     <div className="bg-purple-900/20 rounded-lg p-4 text-left border border-purple-700/30">
                       <p className="text-white font-medium">{selectedFile.name}</p>
@@ -546,7 +549,7 @@ export const PersonalFilesManager = () => {
                         className="cursor-pointer px-6 py-3 bg-gradient-to-r from-purple-700 to-purple-600 text-white rounded-xl font-medium hover:from-purple-600 hover:to-purple-500 transition-all flex items-center gap-2 shadow-lg shadow-purple-700/30"
                       >
                         <UploadCloud className="w-5 h-5" />
-                        Subir archivo
+                        {t('playground.personalFiles.upload.uploadFile')}
                       </button>
                       <button
                         onClick={() => {
@@ -557,7 +560,7 @@ export const PersonalFilesManager = () => {
                         }}
                         className="cursor-pointer px-6 py-3 bg-gray-700/50 text-white rounded-xl font-medium hover:bg-gray-700 transition-all"
                       >
-                        Cancelar
+                        {t('playground.personalFiles.upload.cancel')}
                       </button>
                     </div>
                   </div>
@@ -568,9 +571,9 @@ export const PersonalFilesManager = () => {
                     </div>
                     <div>
                       <p className="text-white text-lg font-medium mb-2">
-                        Arrastra y suelta un archivo aquí
+                        {t('playground.personalFiles.upload.dragDrop')}
                       </p>
-                      <p className="text-slate-400 text-sm mb-4">o</p>
+                      <p className="text-slate-400 text-sm mb-4">{t('playground.personalFiles.upload.or')}</p>
                       <label className="inline-block">
                         <input
                           ref={fileInputRef}
@@ -585,12 +588,12 @@ export const PersonalFilesManager = () => {
                             application/typescript,text/x-typescript,text/css,text/html,text/markdown,text/csv"
                         />
                         <span className="px-6 py-3 bg-gradient-to-r from-purple-700 to-purple-600 text-white rounded-xl font-medium hover:from-purple-600 hover:to-purple-500 transition-all cursor-pointer inline-flex items-center gap-2 shadow-lg shadow-purple-700/30">
-                          Seleccionar archivo
+                          {t('playground.personalFiles.upload.selectFile')}
                         </span>
                       </label>
                     </div>
                     <p className="text-xs text-purple-400 mt-4">
-                      Tamaño máximo: 50MB
+                      {t('playground.personalFiles.upload.maxSize')}
                     </p>
                   </div>
                 )}
@@ -600,13 +603,13 @@ export const PersonalFilesManager = () => {
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm text-purple-300 mb-2">
-                      Nombre del archivo
+                      {t('playground.personalFiles.upload.fileName')}
                     </label>
                     <input
                       type="text"
                       value={plainTextFilename}
                       onChange={(e) => setPlainTextFilename(e.target.value)}
-                      placeholder="data.txt o config.json"
+                      placeholder={t('playground.personalFiles.upload.fileNamePlaceholder')}
                       className="w-full px-4 py-2 bg-purple-950/50 border border-purple-700/30 rounded-lg text-white placeholder-purple-400/50 focus:outline-none focus:border-purple-500"
                       disabled={isUploading}
                     />
@@ -614,7 +617,7 @@ export const PersonalFilesManager = () => {
                   <div>
                     <div className="flex items-center justify-between mb-2">
                       <label className="block text-sm text-purple-300">
-                        Contenido
+                        {t('playground.personalFiles.upload.content')}
                       </label>
                       <label className="flex items-center gap-2 text-xs text-purple-400 cursor-pointer">
                         <input
@@ -624,13 +627,13 @@ export const PersonalFilesManager = () => {
                           className="rounded"
                           disabled={isUploading}
                         />
-                        Es JSON
+                        {t('playground.personalFiles.upload.isJson')}
                       </label>
                     </div>
                     <textarea
                       value={plainTextData}
                       onChange={(e) => setPlainTextData(e.target.value)}
-                      placeholder={isPlainTextJson ? '{"key": "value"}' : 'Escribe tu texto aquí...'}
+                      placeholder={isPlainTextJson ? t('playground.personalFiles.upload.jsonPlaceholder') : t('playground.personalFiles.upload.textPlaceholder')}
                       rows={10}
                       className="w-full px-4 py-2 bg-purple-950/50 border border-purple-700/30 rounded-lg text-white placeholder-purple-400/50 focus:outline-none focus:border-purple-500 font-mono text-sm"
                       disabled={isUploading}
@@ -643,7 +646,7 @@ export const PersonalFilesManager = () => {
                       className="cursor-pointer px-6 py-3 bg-gradient-to-r from-purple-700 to-purple-600 text-white rounded-xl font-medium hover:from-purple-600 hover:to-purple-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-lg shadow-purple-700/30"
                     >
                       <UploadCloud className="w-5 h-5" />
-                      {isUploading ? 'Subiendo...' : 'Subir texto'}
+                      {isUploading ? t('playground.personalFiles.upload.uploadingText') : t('playground.personalFiles.upload.uploadText')}
                     </button>
                     <button
                       onClick={() => {
@@ -654,7 +657,7 @@ export const PersonalFilesManager = () => {
                       className="cursor-pointer px-6 py-3 bg-gray-700/50 text-white rounded-xl font-medium hover:bg-gray-700 transition-all"
                       disabled={isUploading}
                     >
-                      Limpiar
+                      {t('playground.personalFiles.upload.clear')}
                     </button>
                   </div>
                 </div>
@@ -676,13 +679,13 @@ export const PersonalFilesManager = () => {
                   </div>
                 </div>
                 <h3 className="text-2xl font-semibold text-white mb-2">
-                  Archivo subido exitosamente
+                  {t('playground.personalFiles.upload.success.title')}
                 </h3>
               </div>
 
               <div className="bg-purple-900/20 rounded-xl p-6 space-y-4 border border-purple-700/30">
                 <div>
-                  <p className="text-sm text-purple-300 mb-1">URL pública</p>
+                  <p className="text-sm text-purple-300 mb-1">{t('playground.personalFiles.upload.success.publicUrl')}</p>
                   <div className="flex items-center gap-2 bg-purple-950/50 rounded-lg p-3 border border-purple-800/30 group">
                     <p className="text-purple-400 text-sm break-all flex-1">
                       {assembleFileUrl(uploadResult.data.fileId)}
@@ -710,7 +713,7 @@ export const PersonalFilesManager = () => {
                   className="px-6 py-3 bg-gradient-to-r from-purple-700 to-purple-600 text-white rounded-xl font-medium hover:from-purple-600 hover:to-purple-500 transition-all flex items-center gap-2 hover:scale-105 transform shadow-lg shadow-purple-700/30"
                 >
                   <ExternalLink className="w-5 h-5" />
-                  Ver en explorador
+                  {t('playground.personalFiles.upload.success.viewInExplorer')}
                 </Link>
                 <button
                   onClick={() => {
@@ -722,7 +725,7 @@ export const PersonalFilesManager = () => {
                   }}
                   className="cursor-pointer px-6 py-3 bg-gray-700/50 text-white rounded-xl font-medium hover:bg-gray-700 transition-all hover:scale-105 transform"
                 >
-                  Subir otro archivo
+                  {t('playground.personalFiles.upload.success.uploadAnother')}
                 </button>
               </div>
             </div>
@@ -733,7 +736,7 @@ export const PersonalFilesManager = () => {
           <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
             <h3 className="text-xl font-semibold text-white flex items-center gap-2">
               <File className="w-5 h-5 text-purple-400" />
-              Mis archivos ({files.length})
+              {t('playground.personalFiles.myFiles.title')} ({files.length})
             </h3>
             <button
               onClick={loadPersonalFiles}
@@ -741,7 +744,7 @@ export const PersonalFilesManager = () => {
               className="cursor-pointer px-4 py-2 bg-purple-900/30 text-white rounded-lg text-sm font-medium hover:bg-purple-900/50 transition-all flex items-center gap-2 disabled:opacity-50 border border-purple-700/30"
             >
               <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-              Actualizar
+              {t('playground.personalFiles.myFiles.refresh')}
             </button>
           </div>
 
@@ -752,9 +755,9 @@ export const PersonalFilesManager = () => {
           ) : files.length === 0 ? (
             <div className="text-center py-12">
               <File className="w-16 h-16 text-purple-400 mx-auto mb-4 opacity-50" />
-              <p className="text-purple-300 text-lg">No hay archivos aún</p>
+              <p className="text-purple-300 text-lg">{t('playground.personalFiles.myFiles.noFiles')}</p>
               <p className="text-slate-400 text-sm mt-2">
-                Sube tu primer archivo usando el formulario de arriba
+                {t('playground.personalFiles.myFiles.noFilesDesc')}
               </p>
             </div>
           ) : (
@@ -783,13 +786,13 @@ export const PersonalFilesManager = () => {
 
                     <div className="space-y-2 pt-2 border-t border-purple-700/30">
                       <div className="flex justify-between items-center text-xs">
-                        <span className="text-purple-300">Tamaño</span>
+                        <span className="text-purple-300">{t('playground.personalFiles.myFiles.size')}</span>
                         <span className="text-white font-medium">
                           {formatFileSize(file.size)}
                         </span>
                       </div>
                       <div className="flex justify-between items-center text-xs">
-                        <span className="text-purple-300">Subido</span>
+                        <span className="text-purple-300">{t('playground.personalFiles.myFiles.uploaded')}</span>
                         <span className="text-white font-medium">
                           {formatDate(file.createdAt)}
                         </span>
@@ -797,7 +800,7 @@ export const PersonalFilesManager = () => {
                     </div>
 
                     <div className="pt-2 border-t border-purple-700/30">
-                      <p className="text-xs text-purple-300 mb-2">URL pública</p>
+                      <p className="text-xs text-purple-300 mb-2">{t('playground.personalFiles.myFiles.publicUrl')}</p>
                       <div className="bg-purple-950/50 rounded-lg p-2 mb-3 border border-purple-800/30">
                         <p className="text-purple-400 text-xs break-all line-clamp-2">
                           {assembleFileUrl(file.id)}
@@ -813,14 +816,14 @@ export const PersonalFilesManager = () => {
                         className="flex-1 min-w-[80px] px-3 py-2 bg-gradient-to-r from-purple-700 to-purple-600 text-white rounded-lg text-xs font-medium hover:from-purple-600 hover:to-purple-500 transition-all flex items-center justify-center gap-2 shadow-lg shadow-purple-700/20"
                       >
                         <ExternalLink className="w-3 h-3" />
-                        Ver
+                        {t('playground.personalFiles.myFiles.view')}
                       </a>
                       {(file.mimeType.includes('text') || file.mimeType.includes('json')) && (
                         <>
                           <button
                             onClick={() => handleViewFileContent(file.id, 'text')}
                             className="cursor-pointer px-3 py-2 bg-blue-900/30 text-blue-300 rounded-lg text-xs font-medium hover:bg-blue-900/50 transition-all flex items-center justify-center gap-2 border border-blue-700/50"
-                            title="Ver como texto"
+                            title={t('playground.personalFiles.myFiles.viewAsText')}
                           >
                             <FileText className="w-3 h-3" />
                           </button>
@@ -828,7 +831,7 @@ export const PersonalFilesManager = () => {
                             <button
                               onClick={() => handleViewFileContent(file.id, 'json')}
                               className="cursor-pointer px-3 py-2 bg-green-900/30 text-green-300 rounded-lg text-xs font-medium hover:bg-green-900/50 transition-all flex items-center justify-center gap-2 border border-green-700/50"
-                              title="Ver como JSON"
+                              title={t('playground.personalFiles.myFiles.viewAsJson')}
                             >
                               <Database className="w-3 h-3" />
                             </button>
@@ -838,7 +841,7 @@ export const PersonalFilesManager = () => {
                       <button
                         onClick={() => handleViewUploadStatus(file.id)}
                         className="cursor-pointer px-3 py-2 bg-yellow-900/30 text-yellow-300 rounded-lg text-xs font-medium hover:bg-yellow-900/50 transition-all flex items-center justify-center gap-2 border border-yellow-700/50"
-                        title="Ver estado de subida"
+                        title={t('playground.personalFiles.myFiles.viewUploadStatus')}
                       >
                         <Activity className="w-3 h-3" />
                       </button>
@@ -852,7 +855,7 @@ export const PersonalFilesManager = () => {
                         ) : (
                           <Trash2 className="w-3 h-3" />
                         )}
-                        Eliminar
+                        {t('playground.personalFiles.myFiles.delete')}
                       </button>
                     </div>
                   </div>
@@ -867,7 +870,7 @@ export const PersonalFilesManager = () => {
             <div className="bg-purple-950/50 border border-purple-600/50 rounded-2xl shadow-2xl w-full max-w-4xl mx-4 max-h-[90vh] overflow-hidden flex flex-col" onClick={(e) => e.stopPropagation()}>
               <div className="flex items-center justify-between p-6 border-b border-purple-700/30">
                 <h3 className="text-xl font-semibold text-white">
-                  {viewingFileContent.type === 'text' ? 'Contenido del archivo' : 'JSON del archivo'}
+                  {viewingFileContent.type === 'text' ? t('playground.personalFiles.viewContent.textTitle') : t('playground.personalFiles.viewContent.jsonTitle')}
                 </h3>
                 <button onClick={() => setViewingFileContent(null)} className="cursor-pointer text-purple-400/60 hover:text-purple-300 transition-colors p-2">
                   <X className="w-6 h-6" />
@@ -892,7 +895,7 @@ export const PersonalFilesManager = () => {
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm" onClick={() => setUploadStatus(null)}>
             <div className="bg-purple-950/50 border border-purple-600/50 rounded-2xl shadow-2xl w-full max-w-2xl mx-4 max-h-[90vh] overflow-hidden flex flex-col" onClick={(e) => e.stopPropagation()}>
               <div className="flex items-center justify-between p-6 border-b border-purple-700/30">
-                <h3 className="text-xl font-semibold text-white">Estado de subida</h3>
+                <h3 className="text-xl font-semibold text-white">{t('playground.personalFiles.uploadStatus.title')}</h3>
                 <button onClick={() => setUploadStatus(null)} className="cursor-pointer text-purple-400/60 hover:text-purple-300 transition-colors p-2">
                   <X className="w-6 h-6" />
                 </button>
@@ -900,11 +903,11 @@ export const PersonalFilesManager = () => {
               <div className="flex-1 overflow-y-auto p-6">
                 <div className="space-y-4">
                   <div>
-                    <p className="text-sm text-purple-300 mb-1">Estado</p>
+                    <p className="text-sm text-purple-300 mb-1">{t('playground.personalFiles.uploadStatus.status')}</p>
                     <p className="text-white font-medium capitalize">{uploadStatus.status.status}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-purple-300 mb-1">Progreso</p>
+                    <p className="text-sm text-purple-300 mb-1">{t('playground.personalFiles.uploadStatus.progress')}</p>
                     <div className="w-full bg-purple-900/30 rounded-full h-3 overflow-hidden">
                       <div
                         className="bg-gradient-to-r from-purple-500 to-purple-600 h-full transition-all"
@@ -915,30 +918,30 @@ export const PersonalFilesManager = () => {
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <p className="text-sm text-purple-300 mb-1">Chunks totales</p>
+                      <p className="text-sm text-purple-300 mb-1">{t('playground.personalFiles.uploadStatus.totalChunks')}</p>
                       <p className="text-white font-medium">{uploadStatus.status.totalChunks}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-purple-300 mb-1">Chunks subidos</p>
+                      <p className="text-sm text-purple-300 mb-1">{t('playground.personalFiles.uploadStatus.uploadedChunks')}</p>
                       <p className="text-white font-medium">{uploadStatus.status.uploadedChunks}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-purple-300 mb-1">Chunks fallidos</p>
+                      <p className="text-sm text-purple-300 mb-1">{t('playground.personalFiles.uploadStatus.failedChunks')}</p>
                       <p className="text-white font-medium">{uploadStatus.status.failedChunks}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-purple-300 mb-1">Reintentos</p>
+                      <p className="text-sm text-purple-300 mb-1">{t('playground.personalFiles.uploadStatus.retries')}</p>
                       <p className="text-white font-medium">{uploadStatus.status.retryCount}</p>
                     </div>
                   </div>
                   {uploadStatus.status.chunks && uploadStatus.status.chunks.length > 0 && (
                     <div>
-                      <p className="text-sm text-purple-300 mb-2">Detalles de chunks</p>
+                      <p className="text-sm text-purple-300 mb-2">{t('playground.personalFiles.uploadStatus.chunkDetails')}</p>
                       <div className="space-y-2 max-h-60 overflow-y-auto">
                         {uploadStatus.status.chunks?.map((chunk, idx: number) => (
                           <div key={idx} className="bg-purple-950/30 rounded-lg p-3 text-sm">
                             <div className="flex justify-between items-center mb-1">
-                              <span className="text-purple-300">Chunk #{chunk.chunkIndex}</span>
+                              <span className="text-purple-300">{t('playground.personalFiles.uploadStatus.chunk')}{chunk.chunkIndex}</span>
                               <span className={`capitalize ${chunk.status === 'completed' ? 'text-green-400' : 'text-yellow-400'}`}>
                                 {chunk.status}
                               </span>
@@ -963,7 +966,7 @@ export const PersonalFilesManager = () => {
               <div className="flex items-center justify-between p-6 border-b border-purple-700/30">
                 <h3 className="text-xl font-semibold text-white flex items-center gap-2">
                   <BarChart3 className="w-5 h-5 text-purple-400" />
-                  Estadísticas del Pool de Wallets
+                  {t('playground.personalFiles.poolStats.title')}
                 </h3>
                 <button onClick={() => setPoolStats(null)} className="cursor-pointer text-purple-400/60 hover:text-purple-300 transition-colors p-2">
                   <X className="w-6 h-6" />
@@ -972,20 +975,20 @@ export const PersonalFilesManager = () => {
               <div className="flex-1 overflow-y-auto p-6">
                 <div className="space-y-6">
                   <div className="bg-purple-900/20 rounded-lg p-4 border border-purple-700/30">
-                    <p className="text-sm text-purple-300 mb-2">Resumen</p>
+                    <p className="text-sm text-purple-300 mb-2">{t('playground.personalFiles.poolStats.summary')}</p>
                     <div className="grid grid-cols-3 gap-4">
                       <div>
-                        <p className="text-xs text-purple-400 mb-1">Total de Wallets</p>
+                        <p className="text-xs text-purple-400 mb-1">{t('playground.personalFiles.poolStats.totalWallets')}</p>
                         <p className="text-2xl font-bold text-white">{poolStats.totalWallets ?? 0}</p>
                       </div>
                       <div>
-                        <p className="text-xs text-purple-400 mb-1">Wallets Activas</p>
+                        <p className="text-xs text-purple-400 mb-1">{t('playground.personalFiles.poolStats.activeWallets')}</p>
                         <p className="text-2xl font-bold text-green-400">
                           {poolStats.queues.filter(q => q.isProcessing).length}
                         </p>
                       </div>
                       <div>
-                        <p className="text-xs text-purple-400 mb-1">Chunks Pendientes</p>
+                        <p className="text-xs text-purple-400 mb-1">{t('playground.personalFiles.poolStats.pendingChunks')}</p>
                         <p className="text-2xl font-bold text-yellow-400">
                           {poolStats.queues.reduce((sum, q) => sum + (q.pendingChunks || 0), 0)}
                         </p>
@@ -994,7 +997,7 @@ export const PersonalFilesManager = () => {
                   </div>
 
                   <div>
-                    <p className="text-sm text-purple-300 mb-3">Detalle de Colas</p>
+                    <p className="text-sm text-purple-300 mb-3">{t('playground.personalFiles.poolStats.queueDetails')}</p>
                     <div className="space-y-3">
                       {poolStats.queues.map((queue) => {
                         const totalOperations = (queue.successCount || 0) + (queue.failedCount || 0) + (queue.errorCount || 0);
@@ -1014,15 +1017,15 @@ export const PersonalFilesManager = () => {
                             <div className="flex items-start justify-between mb-3">
                               <div className="flex-1">
                                 <div className="flex items-center gap-2 mb-2">
-                                  <p className="text-white font-medium">Cola #{queue.queueIndex}</p>
+                                  <p className="text-white font-medium">{t('playground.personalFiles.poolStats.queue')}{queue.queueIndex}</p>
                                   {queue.isProcessing && (
                                     <span className="px-2 py-0.5 bg-green-900/30 text-green-400 text-xs rounded border border-green-700/50">
-                                      Procesando
+                                      {t('playground.personalFiles.poolStats.processing')}
                                     </span>
                                   )}
                                   {!queue.isProcessing && (
                                     <span className="px-2 py-0.5 bg-gray-900/30 text-gray-400 text-xs rounded border border-gray-700/50">
-                                      Inactiva
+                                      {t('playground.personalFiles.poolStats.inactive')}
                                     </span>
                                   )}
                                 </div>
@@ -1033,19 +1036,19 @@ export const PersonalFilesManager = () => {
                             </div>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-3 border-t border-purple-700/30">
                               <div>
-                                <p className="text-xs text-purple-400 mb-1">Chunks Pendientes</p>
+                                <p className="text-xs text-purple-400 mb-1">{t('playground.personalFiles.poolStats.pending')}</p>
                                 <p className="text-lg font-bold text-white">{queue.pendingChunks ?? 0}</p>
                               </div>
                               <div>
-                                <p className="text-xs text-green-400 mb-1">Exitosos</p>
+                                <p className="text-xs text-green-400 mb-1">{t('playground.personalFiles.poolStats.successful')}</p>
                                 <p className="text-lg font-bold text-green-400">{queue.successCount ?? 0}</p>
                               </div>
                               <div>
-                                <p className="text-xs text-red-400 mb-1">Fallidos</p>
+                                <p className="text-xs text-red-400 mb-1">{t('playground.personalFiles.poolStats.failed')}</p>
                                 <p className="text-lg font-bold text-red-400">{queue.failedCount ?? 0}</p>
                               </div>
                               <div>
-                                <p className="text-xs text-yellow-400 mb-1">Tasa de Éxito</p>
+                                <p className="text-xs text-yellow-400 mb-1">{t('playground.personalFiles.poolStats.successRate')}</p>
                                 <p className="text-lg font-bold text-yellow-400">{successRate}%</p>
                               </div>
                             </div>
@@ -1056,22 +1059,22 @@ export const PersonalFilesManager = () => {
                   </div>
 
                   <div className="bg-purple-900/20 rounded-lg p-4 border border-purple-700/30">
-                    <p className="text-sm text-purple-300 mb-3">Estadísticas Totales</p>
+                    <p className="text-sm text-purple-300 mb-3">{t('playground.personalFiles.poolStats.totalStats')}</p>
                     <div className="grid grid-cols-3 gap-4">
                       <div>
-                        <p className="text-xs text-green-400 mb-1">Total Exitosos</p>
+                        <p className="text-xs text-green-400 mb-1">{t('playground.personalFiles.poolStats.totalSuccessful')}</p>
                         <p className="text-xl font-bold text-green-400">
                           {poolStats.queues.reduce((sum, q) => sum + (q.successCount || 0), 0)}
                         </p>
                       </div>
                       <div>
-                        <p className="text-xs text-red-400 mb-1">Total Fallidos</p>
+                        <p className="text-xs text-red-400 mb-1">{t('playground.personalFiles.poolStats.totalFailed')}</p>
                         <p className="text-xl font-bold text-red-400">
                           {poolStats.queues.reduce((sum, q) => sum + (q.failedCount || 0), 0)}
                         </p>
                       </div>
                       <div>
-                        <p className="text-xs text-purple-400 mb-1">Tasa de Éxito Global</p>
+                        <p className="text-xs text-purple-400 mb-1">{t('playground.personalFiles.poolStats.globalSuccessRate')}</p>
                         <p className="text-xl font-bold text-white">
                           {(() => {
                             const totalSuccess = poolStats.queues.reduce((sum, q) => sum + (q.successCount || 0), 0);

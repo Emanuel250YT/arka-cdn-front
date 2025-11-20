@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { ArkaCDNClient, RequestResponseData } from "@/lib/arka-cdn-client";
 import { Database, Search, Edit, Loader2, X, CheckCircle2 } from "lucide-react";
 import { RequestResponseViewer } from "@/components/common/RequestResponseViewer";
+import { useI18n } from "@/i18n/I18nProvider";
 
 interface EntityManagerProps {
   client: ArkaCDNClient;
@@ -15,6 +16,7 @@ export const EntityManager = ({
   client,
   isAuthenticated,
 }: EntityManagerProps) => {
+  const { t } = useI18n();
   const [latestRequestResponse, setLatestRequestResponse] = useState<RequestResponseData | null>(null);
   const [queryFilters, setQueryFilters] = useState({
     type: "",
@@ -51,7 +53,7 @@ export const EntityManager = ({
 
   const handleQuery = async () => {
     if (!isAuthenticated) {
-      setError("Debes estar autenticado para consultar entidades");
+      setError(t('playground.entityManager.errors.notAuthenticated'));
       return;
     }
 
@@ -69,7 +71,7 @@ export const EntityManager = ({
       const response = await client.queryEntities(filters);
       setQueryResults(response.data || []);
     } catch (err: any) {
-      setError(err.message || "Error al consultar entidades");
+      setError(err.message || t('playground.entityManager.errors.queryError'));
     } finally {
       setLoadingQuery(false);
     }
@@ -93,7 +95,7 @@ export const EntityManager = ({
         try {
           updatePayload.customData = JSON.parse(updateData.customData);
         } catch {
-          throw new Error("El customData debe ser un JSON válido");
+          throw new Error(t('playground.entityManager.errors.invalidJson'));
         }
       }
 
@@ -108,7 +110,7 @@ export const EntityManager = ({
       });
       await handleQuery();
     } catch (err: any) {
-      setError(err.message || "Error al actualizar entidad");
+      setError(err.message || t('playground.entityManager.errors.updateError'));
     } finally {
       setUpdating(false);
     }
@@ -134,16 +136,16 @@ export const EntityManager = ({
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-xl font-semibold text-white flex items-center gap-2">
               <Database className="w-5 h-5 text-purple-400" />
-              Gestión de Entidades en Arkiv Network
+              {t('playground.entityManager.title')}
             </h3>
           </div>
 
           {!isAuthenticated ? (
             <div className="text-center py-12">
               <Database className="w-16 h-16 text-purple-400 mx-auto mb-4 opacity-50" />
-              <p className="text-purple-300 text-lg">Debes estar autenticado</p>
+              <p className="text-purple-300 text-lg">{t('playground.entityManager.notAuthenticated')}</p>
               <p className="text-slate-400 text-sm mt-2">
-                Inicia sesión para gestionar entidades en Arkiv Network
+                {t('playground.entityManager.notAuthenticatedDesc')}
               </p>
             </div>
           ) : (
@@ -151,12 +153,12 @@ export const EntityManager = ({
               <div className="bg-purple-950/30 rounded-xl p-6 mb-6 border border-purple-700/30">
                 <h4 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
                   <Search className="w-5 h-5 text-purple-400" />
-                  Consultar Entidades
+                  {t('playground.entityManager.query.title')}
                 </h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                   <div>
                     <label className="block text-sm text-purple-300 mb-2">
-                      Tipo
+                      {t('playground.entityManager.query.type')}
                     </label>
                     <input
                       type="text"
@@ -167,13 +169,13 @@ export const EntityManager = ({
                           type: e.target.value,
                         })
                       }
-                      placeholder="file, file-chunk, etc."
+                      placeholder={t('playground.entityManager.query.typePlaceholder')}
                       className="w-full px-4 py-2 bg-purple-950/50 border border-purple-700/30 rounded-lg text-white placeholder-purple-400/50 focus:outline-none focus:border-purple-500"
                     />
                   </div>
                   <div>
                     <label className="block text-sm text-purple-300 mb-2">
-                      Nombre de archivo
+                      {t('playground.entityManager.query.fileName')}
                     </label>
                     <input
                       type="text"
@@ -184,13 +186,13 @@ export const EntityManager = ({
                           fileName: e.target.value,
                         })
                       }
-                      placeholder="image.jpg"
+                      placeholder={t('playground.entityManager.query.fileNamePlaceholder')}
                       className="w-full px-4 py-2 bg-purple-950/50 border border-purple-700/30 rounded-lg text-white placeholder-purple-400/50 focus:outline-none focus:border-purple-500"
                     />
                   </div>
                   <div>
                     <label className="block text-sm text-purple-300 mb-2">
-                      Límite
+                      {t('playground.entityManager.query.limit')}
                     </label>
                     <input
                       type="number"
@@ -219,7 +221,7 @@ export const EntityManager = ({
                         }
                         className="rounded"
                       />
-                      Con atributos
+                      {t('playground.entityManager.query.withAttributes')}
                     </label>
                     <label className="flex items-center gap-2 text-sm text-purple-300 cursor-pointer">
                       <input
@@ -233,7 +235,7 @@ export const EntityManager = ({
                         }
                         className="rounded"
                       />
-                      Con payload
+                      {t('playground.entityManager.query.withPayload')}
                     </label>
                   </div>
                 </div>
@@ -247,7 +249,7 @@ export const EntityManager = ({
                   ) : (
                     <Search className="w-5 h-5" />
                   )}
-                  Consultar
+                  {t('playground.entityManager.query.button')}
                 </button>
               </div>
 
@@ -261,7 +263,7 @@ export const EntityManager = ({
               {queryResults.length > 0 && (
                 <div className="space-y-3">
                   <h4 className="text-lg font-semibold text-white">
-                    Resultados ({queryResults.length})
+                    {t('playground.entityManager.results.title')} ({queryResults.length})
                   </h4>
                   {queryResults.map((entity, idx) => (
                     <div
@@ -271,7 +273,7 @@ export const EntityManager = ({
                       <div className="flex items-start justify-between mb-4">
                         <div className="flex-1 min-w-0">
                           <p className="text-white font-medium text-sm mb-2">
-                            Entity Key
+                            {t('playground.entityManager.results.entityKey')}
                           </p>
                           <p className="text-purple-400 text-xs font-mono break-all">
                             {entity.entityKey}
@@ -282,13 +284,13 @@ export const EntityManager = ({
                           className="cursor-pointer px-4 py-2 bg-blue-900/30 text-blue-300 rounded-lg text-sm font-medium hover:bg-blue-900/50 transition-all flex items-center gap-2 border border-blue-700/50"
                         >
                           <Edit className="w-4 h-4" />
-                          Editar
+                          {t('playground.entityManager.results.edit')}
                         </button>
                       </div>
                       {entity.attributes && (
                         <div className="space-y-2 pt-4 border-t border-purple-700/30">
                           <p className="text-sm text-purple-300 font-medium">
-                            Atributos
+                            {t('playground.entityManager.results.attributes')}
                           </p>
                           <pre className="bg-purple-950/30 rounded-lg p-3 text-xs text-purple-200 font-mono overflow-x-auto">
                             {JSON.stringify(entity.attributes, null, 2)}
@@ -298,7 +300,7 @@ export const EntityManager = ({
                       {entity.payload && (
                         <div className="space-y-2 pt-4 border-t border-purple-700/30">
                           <p className="text-sm text-purple-300 font-medium">
-                            Payload
+                            {t('playground.entityManager.results.payload')}
                           </p>
                           <pre className="bg-purple-950/30 rounded-lg p-3 text-xs text-purple-200 font-mono overflow-x-auto">
                             {JSON.stringify(entity.payload, null, 2)}
@@ -322,7 +324,7 @@ export const EntityManager = ({
                     <div className="flex items-center justify-between p-6 border-b border-purple-700/30">
                       <h3 className="text-xl font-semibold text-white flex items-center gap-2">
                         <Edit className="w-5 h-5 text-purple-400" />
-                        Actualizar Entidad
+                        {t('playground.entityManager.edit.title')}
                       </h3>
                       <button
                         onClick={() => setEditingEntity(null)}
@@ -335,7 +337,7 @@ export const EntityManager = ({
                       <div className="space-y-4">
                         <div>
                           <label className="block text-sm text-purple-300 mb-2">
-                            Entity Key
+                            {t('playground.entityManager.edit.entityKey')}
                           </label>
                           <p className="text-purple-400 text-sm font-mono break-all bg-purple-950/30 rounded-lg p-3">
                             {editingEntity.key}
@@ -343,7 +345,7 @@ export const EntityManager = ({
                         </div>
                         <div>
                           <label className="block text-sm text-purple-300 mb-2">
-                            Título
+                            {t('playground.entityManager.edit.titleField')}
                           </label>
                           <input
                             type="text"
@@ -359,7 +361,7 @@ export const EntityManager = ({
                         </div>
                         <div>
                           <label className="block text-sm text-purple-300 mb-2">
-                            Contenido
+                            {t('playground.entityManager.edit.content')}
                           </label>
                           <textarea
                             value={updateData.content}
@@ -375,7 +377,7 @@ export const EntityManager = ({
                         </div>
                         <div>
                           <label className="block text-sm text-purple-300 mb-2">
-                            Descripción
+                            {t('playground.entityManager.edit.description')}
                           </label>
                           <textarea
                             value={updateData.description}
@@ -391,7 +393,7 @@ export const EntityManager = ({
                         </div>
                         <div>
                           <label className="block text-sm text-purple-300 mb-2">
-                            Horas de expiración (1-8760)
+                            {t('playground.entityManager.edit.expirationHours')}
                           </label>
                           <input
                             type="number"
@@ -409,7 +411,7 @@ export const EntityManager = ({
                         </div>
                         <div>
                           <label className="block text-sm text-purple-300 mb-2">
-                            Custom Data (JSON)
+                            {t('playground.entityManager.edit.customData')}
                           </label>
                           <textarea
                             value={updateData.customData}
@@ -420,7 +422,7 @@ export const EntityManager = ({
                               })
                             }
                             rows={6}
-                            placeholder='{"key": "value"}'
+                            placeholder={t('playground.entityManager.edit.customDataPlaceholder')}
                             className="w-full px-4 py-2 bg-purple-950/50 border border-purple-700/30 rounded-lg text-white focus:outline-none focus:border-purple-500 font-mono text-sm"
                           />
                         </div>
@@ -431,7 +433,7 @@ export const EntityManager = ({
                         onClick={() => setEditingEntity(null)}
                         className="cursor-pointer px-6 py-2.5 text-purple-300 bg-purple-800/50 border border-purple-700/50 rounded-lg font-medium hover:bg-purple-800/70 transition-colors"
                       >
-                        Cancelar
+                        {t('playground.entityManager.edit.cancel')}
                       </button>
                       <button
                         onClick={handleUpdateEntity}
@@ -443,7 +445,7 @@ export const EntityManager = ({
                         ) : (
                           <CheckCircle2 className="w-4 h-4" />
                         )}
-                        Actualizar
+                        {t('playground.entityManager.edit.update')}
                       </button>
                     </div>
                   </div>
