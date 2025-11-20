@@ -3,9 +3,37 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { ArkaCDNClient } from "@/lib/arka-cdn-client";
+import { User } from "lucide-react";
 
 export const Header = () => {
   const pathname = usePathname();
+  const [client] = useState(() => new ArkaCDNClient(undefined, 'user'));
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return client.isAuthenticated();
+  });
+
+  useEffect(() => {
+    const checkAuth = () => {
+      setIsAuthenticated(client.isAuthenticated());
+    };
+    checkAuth();
+    
+    const handleStorageChange = () => {
+      checkAuth();
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    
+    const interval = setInterval(checkAuth, 1000);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      clearInterval(interval);
+    };
+  }, [client, pathname]);
 
   const isActive = (path: string) => pathname === path;
 
@@ -55,12 +83,12 @@ export const Header = () => {
           >
             Docs
           </Link>
-          <a
-            href="#"
+          <Link
+            href="https://github.com/Emanuel250YT/arka-cdn"
             className="px-5 py-2 text-sm text-white hover:text-purple-400 transition-colors rounded-full hover:bg-purple-900/20"
           >
             GitHub
-          </a>
+          </Link>
         </div>
 
         <div className="flex items-center gap-3 flex-wrap">
@@ -70,21 +98,31 @@ export const Header = () => {
           >
             Try Playground
           </Link>
-          <div className="hidden sm:flex items-center gap-2.5">
+          {isAuthenticated ? (
             <Link
-              href="/login"
-              className="px-5 py-2 text-sm text-white transition-colors rounded-full hover:bg-purple-900/20"
+              href="/dashboard"
+              className="px-5 py-2.5 bg-gradient-to-r from-purple-700 to-purple-600 text-white text-sm rounded-full hover:from-purple-600 hover:to-purple-500 transition-all font-medium shadow-lg shadow-purple-700/30 hover:shadow-purple-700/40 flex items-center gap-2"
             >
-              Iniciar sesión
+              <User className="w-4 h-4" />
+              Dashboard
             </Link>
+          ) : (
+            <div className="hidden sm:flex items-center gap-2.5">
+              <Link
+                href="/login"
+                className="px-5 py-2 text-sm text-white transition-colors rounded-full hover:bg-purple-900/20"
+              >
+                Iniciar sesión
+              </Link>
 
-            <Link
-              href="/register"
-              className="px-5 py-2.5 bg-gradient-to-r from-purple-700 to-purple-600 text-white text-sm rounded-full hover:from-purple-600 hover:to-purple-500 transition-all font-medium shadow-lg shadow-purple-700/30"
-            >
-              Registrarse
-            </Link>
-          </div>
+              <Link
+                href="/register"
+                className="px-5 py-2.5 bg-gradient-to-r from-purple-700 to-purple-600 text-white text-sm rounded-full hover:from-purple-600 hover:to-purple-500 transition-all font-medium shadow-lg shadow-purple-700/30"
+              >
+                Registrarse
+              </Link>
+            </div>
+          )}
         </div>
       </nav>
     </header>
