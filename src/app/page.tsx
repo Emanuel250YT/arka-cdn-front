@@ -4,6 +4,8 @@ import { BackgroundEffects } from "@/components/landing/BackgroundEffects";
 import { Header } from "@/components/landing/Header";
 import { HeroSection } from "@/components/landing/HeroSection";
 import { FeaturesSection } from "@/components/landing/FeaturesSection";
+import { MissionSection } from "@/components/landing/MissionSection";
+import { FounderSection } from "@/components/landing/FounderSection";
 
 export default function HomePage() {
   return (
@@ -31,6 +33,12 @@ export default function HomePage() {
         <Header />
         <HeroSection />
         <FeaturesSection />
+        <div id="mission">
+          <MissionSection />
+        </div>
+        <div id="founder">
+          <FounderSection />
+        </div>
       </div>
     </div>
   );
