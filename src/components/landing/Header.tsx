@@ -72,7 +72,7 @@ export const Header = () => {
           </div>
         </div>
 
-        <div className="hidden lg:flex items-center gap-1">
+        <div className="hidden xl:flex items-center gap-1">
           <Link
             href="/"
             className={`px-5 py-2 text-sm transition-colors rounded-full ${
@@ -102,7 +102,7 @@ export const Header = () => {
           </Link>
         </div>
 
-        <div className="hidden lg:flex items-center gap-3">
+        <div className="hidden xl:flex items-center gap-3">
           <LanguageSelector />
           <Link
             href="/playground"
@@ -138,7 +138,7 @@ export const Header = () => {
 
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="lg:hidden p-2 text-white hover:text-purple-400 transition-colors"
+          className="xl:hidden p-2 text-white hover:text-purple-400 transition-colors"
           aria-label="Toggle menu"
         >
           {isMobileMenuOpen ? (
@@ -150,7 +150,7 @@ export const Header = () => {
       </nav>
 
       {isMobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 z-50 bg-black/95 backdrop-blur-lg pt-20 px-6">
+        <div className="xl:hidden fixed inset-0 z-50 bg-black/95 backdrop-blur-lg pt-20 px-6">
           <div className="flex flex-col gap-4 max-w-md mx-auto">
             <Link
               href="/"

@@ -64,7 +64,7 @@ export const FeaturesSection = () => {
   const isDesktop = windowWidth >= 768;
 
   return (
-    <section className="py-10 sm:py-14 pb-16 sm:pb-20 lg:py-20 lg:pb-28">
+    <section className="py-10 sm:py-14 pb-16 sm:pb-20 lg:py-20">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
         {features.map((feature, index) => (
           <div
