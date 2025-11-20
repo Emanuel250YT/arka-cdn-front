@@ -1,4 +1,23 @@
+"use client";
+
+import { useState, useEffect } from "react";
+
 export const BackgroundEffects = () => {
+    const [windowWidth, setWindowWidth] = useState(1024);
+
+    useEffect(() => {
+      const handleResize = () => {
+        setWindowWidth(window.innerWidth);
+      };
+      
+      if (typeof window !== 'undefined') {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setWindowWidth(window.innerWidth);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+      }
+    }, []);
+
     const colorSpots = [
       { top: 8, left: 15, width: 420, height: 380, color: 'rgba(107, 33, 168, 0.08)', blur: 140, delay: 0 },
       { top: 32, left: 72, width: 580, height: 520, color: 'rgba(124, 58, 237, 0.06)', blur: 160, delay: 1.2 },
@@ -37,24 +56,27 @@ export const BackgroundEffects = () => {
         />
   
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {colorSpots.map((spot, i) => (
-            <div
-              key={i}
-              className="absolute rounded-full"
-              style={{
-                top: `${spot.top}%`,
-                left: `${spot.left}%`,
-                width: `${spot.width}px`,
-                height: `${spot.height}px`,
-                background: spot.color,
-                filter: `blur(${spot.blur}px)`,
-                transform: `translate(-50%, -50%) scale(${0.95 + (i % 3) * 0.1})`,
-                animation: `floatSpot ${8 + i * 1.5}s ease-in-out infinite`,
-                animationDelay: `${spot.delay}s`,
-                opacity: 0.7,
-              }}
-            />
-          ))}
+          {colorSpots.map((spot, i) => {
+            const scaleFactor = windowWidth < 640 ? 0.6 : windowWidth < 1024 ? 0.8 : 1;
+            return (
+              <div
+                key={i}
+                className="absolute rounded-full"
+                style={{
+                  top: `${spot.top}%`,
+                  left: `${spot.left}%`,
+                  width: `${spot.width * scaleFactor}px`,
+                  height: `${spot.height * scaleFactor}px`,
+                  background: spot.color,
+                  filter: `blur(${spot.blur * scaleFactor}px)`,
+                  transform: `translate(-50%, -50%) scale(${0.95 + (i % 3) * 0.1})`,
+                  animation: `floatSpot ${8 + i * 1.5}s ease-in-out infinite`,
+                  animationDelay: `${spot.delay}s`,
+                  opacity: 0.7,
+                }}
+              />
+            );
+          })}
         </div>
   
         <div 

@@ -22,10 +22,10 @@ export default function HomePage() {
       <div
         className="relative z-10 mx-auto"
         style={{
-          width: "92%",
+          width: "95%",
           maxWidth: "1400px",
-          paddingLeft: "clamp(1.5rem, 4vw, 2.5rem)",
-          paddingRight: "clamp(1.5rem, 4vw, 2.5rem)",
+          paddingLeft: "clamp(1rem, 3vw, 2.5rem)",
+          paddingRight: "clamp(1rem, 3vw, 2.5rem)",
         }}
       >
         <Header />
