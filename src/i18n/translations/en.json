@@ -95,6 +95,12 @@
     "madeWith": "Made with",
     "by": "by"
   },
+  "dashboard": {
+    "badge": "Dashboard",
+    "title1": "Manage your",
+    "title2": "files",
+    "description": "Manage, view and share your files securely with Arka CDN"
+  },
   "auth": {
     "login": {
       "title": "Log in",

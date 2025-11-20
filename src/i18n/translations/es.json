@@ -95,6 +95,12 @@
     "madeWith": "Hecho con",
     "by": "por"
   },
+  "dashboard": {
+    "badge": "Panel de control",
+    "title1": "Gestiona tus",
+    "title2": "archivos",
+    "description": "Administra, visualiza y comparte tus archivos de forma segura con Arka CDN"
+  },
   "auth": {
     "login": {
       "title": "Iniciar sesión",
