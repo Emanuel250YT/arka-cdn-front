@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { I18nWrapper } from "@/components/providers/I18nWrapper";
+import { Footer } from "@/components/common/Footer";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -25,6 +26,7 @@ export default function RootLayout({
       >
         <I18nWrapper>
           {children}
+          <Footer />
         </I18nWrapper>
       </body>
     </html>
