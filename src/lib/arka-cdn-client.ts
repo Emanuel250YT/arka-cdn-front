@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Cliente SDK para Arka CDN
  * Proporciona una interfaz simple para interactuar con la API de Arka CDN
