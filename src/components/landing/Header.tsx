@@ -58,8 +58,8 @@ export const Header = () => {
               src="/arkacdn.png"
               alt="ArkaCDN"
               width={92}
-              height={62}
-              className="brightness-0 invert sm:w-16 sm:h-16"
+              height={92}
+              className="brightness-0 invert"
             />
           </div>
         </div>
