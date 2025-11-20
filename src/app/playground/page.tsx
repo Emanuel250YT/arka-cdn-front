@@ -7,8 +7,10 @@ import { TryItNow } from "@/components/playground/TryItNow";
 import { RealTimeExplorer } from "@/components/playground/RealTimeExplorer";
 import { ArkaCDNClient } from "@/lib/arka-cdn-client";
 import { Loader2 } from "lucide-react";
+import { useI18n } from "@/i18n/I18nProvider";
 
 export default function PlaygroundPage() {
+  const { t } = useI18n();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -74,10 +76,10 @@ export default function PlaygroundPage() {
           </div>
           <div className="space-y-2">
             <h2 className="text-xl sm:text-2xl font-semibold text-white">
-              Cargando perfil de test...
+              {t('playground.page.loading.title')}
             </h2>
             <p className="text-sm sm:text-base text-purple-300/70">
-              Autenticando y preparando el playground
+              {t('playground.page.loading.message')}
             </p>
           </div>
         </div>
@@ -101,7 +103,7 @@ export default function PlaygroundPage() {
         <div className="relative z-10 text-center space-y-6 px-4 max-w-2xl">
           <div className="bg-red-900/20 border border-red-700/50 rounded-lg p-6">
             <h2 className="text-xl sm:text-2xl font-semibold text-red-300 mb-3">
-              Error al cargar el playground
+              {t('playground.page.error.title')}
             </h2>
             <p className="text-sm sm:text-base text-red-200/80 mb-4">
               {error}
@@ -110,7 +112,7 @@ export default function PlaygroundPage() {
               onClick={() => window.location.reload()}
               className="px-4 py-2 bg-red-700/50 hover:bg-red-700/70 text-white rounded-lg transition-colors"
             >
-              Reintentar
+              {t('playground.page.error.retry')}
             </button>
           </div>
         </div>
@@ -144,7 +146,7 @@ export default function PlaygroundPage() {
           <div className="max-w-4xl mx-auto text-center space-y-4 sm:space-y-6">
             <div className="flex items-center justify-center gap-2">
               <span className="text-purple-500">[</span>
-              <p className="text-gray-200 font-medium text-sm sm:text-base">Playground interactivo</p>
+              <p className="text-gray-200 font-medium text-sm sm:text-base">{t('playground.page.badge')}</p>
               <span className="text-purple-500">]</span>
             </div>
 
@@ -152,13 +154,13 @@ export default function PlaygroundPage() {
               className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-[3.5rem] font-semibold text-white px-4"
               style={{ lineHeight: "1.1" }}
             >
-              Prueba Arka CDN
+              {t('playground.page.title1')}
               <br />
               <span
                 className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-purple-500 to-purple-600"
                 style={{ letterSpacing: "-0.02em" }}
               >
-                en tiempo real
+                {t('playground.page.title2')}
               </span>
             </h1>
 
@@ -166,8 +168,7 @@ export default function PlaygroundPage() {
               className="text-sm sm:text-base lg:text-lg text-slate-400 leading-relaxed max-w-2xl mx-auto px-4"
               style={{ lineHeight: "1.7" }}
             >
-              Sube archivos, explora transacciones blockchain y experimenta con el almacenamiento
-              descentralizado más rápido del mundo. Todo sin costo.
+              {t('playground.page.description')}
             </p>
           </div>
         </section>
