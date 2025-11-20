@@ -1,42 +1,92 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 export const Header = () => {
+  const pathname = usePathname();
+
+  const isActive = (path: string) => pathname === path;
+
   return (
-    <header className="pt-8 pb-4">
-      <nav className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="flex items-center gap-2">
-            <Image src="/arkacdn.png" alt="ArkaCDN" width={72} height={72} className="brightness-0 invert" />
+    <header className="pt-6 pb-6 sm:pt-8 sm:pb-4">
+      <nav className="flex items-center justify-between flex-wrap gap-4">
+        <div className="flex items-center gap-3">
+          <div className="relative" style={{ transform: "translateY(2px)" }}>
+            <Image
+              src="/arkacdn.png"
+              alt="ArkaCDN"
+              width={64}
+              height={64}
+              className="brightness-0 invert"
+            />
           </div>
         </div>
 
-        <div className="hidden md:flex items-center gap-1 bg-blue-950/50 backdrop-blur-md rounded-full px-2 py-2 border border-blue-800/30">
-          <a
-            href="#"
-            className="px-5 py-2 text-sm text-white hover:text-blue-300 transition-colors rounded-full hover:bg-blue-900/30"
+        <div className="hidden md:flex items-center gap-1">
+          <Link
+            href="/"
+            className={`px-5 py-2 text-sm transition-colors rounded-full ${
+              isActive("/")
+                ? "text-purple-400 bg-purple-900/30 font-medium"
+                : "text-white hover:text-purple-400 hover:bg-purple-900/20"
+            }`}
           >
             Inicio
-          </a>
-          <a
-            href="#"
-            className="px-5 py-2 text-sm text-blue-300 hover:text-white transition-colors rounded-full hover:bg-blue-900/30"
+          </Link>
+          <Link
+            href="/playground"
+            className={`px-5 py-2 text-sm transition-colors rounded-full ${
+              isActive("/playground")
+                ? "text-purple-400 bg-purple-900/30 font-medium"
+                : "text-white hover:text-purple-400 hover:bg-purple-900/20"
+            }`}
           >
-            Documentación
-          </a>
+            Playground
+          </Link>
+          <Link
+            href="/api-docs"
+            className={`px-5 py-2 text-sm transition-colors rounded-full ${
+              isActive("/api-docs")
+                ? "text-purple-400 bg-purple-900/30 font-medium"
+                : "text-white hover:text-purple-400 hover:bg-purple-900/20"
+            }`}
+          >
+            Docs
+          </Link>
           <a
             href="#"
-            className="px-5 py-2 text-sm text-blue-300 hover:text-white transition-colors rounded-full hover:bg-blue-900/30"
+            className="px-5 py-2 text-sm text-white hover:text-purple-400 transition-colors rounded-full hover:bg-purple-900/20"
           >
             GitHub
           </a>
         </div>
 
-        <Link href="/register" className="px-6 py-2.5 bg-transparent border border-blue-600/40 text-white text-sm rounded-full hover:bg-blue-900/30 hover:border-blue-500/60 transition-all">
-          Get Started
-        </Link>
+        <div className="flex items-center gap-3 flex-wrap">
+          <Link
+            href="/playground"
+            className="px-5 py-2.5 bg-gradient-to-r from-purple-700 to-purple-600 text-white text-sm rounded-full hover:from-purple-600 hover:to-purple-500 transition-all font-medium shadow-lg shadow-purple-700/30 hover:shadow-purple-700/40"
+          >
+            Try Playground
+          </Link>
+          <div className="hidden sm:flex items-center gap-2.5">
+            <Link
+              href="/login"
+              className="px-5 py-2 text-sm text-white transition-colors rounded-full hover:bg-purple-900/20"
+            >
+              Iniciar sesión
+            </Link>
+
+            <Link
+              href="/register"
+              className="px-5 py-2.5 bg-gradient-to-r from-purple-700 to-purple-600 text-white text-sm rounded-full hover:from-purple-600 hover:to-purple-500 transition-all font-medium shadow-lg shadow-purple-700/30"
+            >
+              Registrarse
+            </Link>
+          </div>
+        </div>
       </nav>
     </header>
   );
 };
-

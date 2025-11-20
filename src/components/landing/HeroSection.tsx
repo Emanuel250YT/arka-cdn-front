@@ -3,29 +3,48 @@ import { FloatingCards } from "./FloatingCard";
 
 export const HeroSection = () => {
   return (
-    <section className="py-16 lg:py-24">
-      <div className="grid lg:grid-cols-2 gap-12 items-center">
-        <div className="space-y-8">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-900/30 border border-blue-700/40 rounded-full text-sm">
-            <span className="text-blue-400">[ 150+ organizations ]</span>
+    <section className="py-12 lg:py-20">
+      <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-16 lg:gap-20 items-start">
+        <div className="space-y-5 lg:space-y-6">
+          <div className="flex items-center gap-2">
+            <span className="text-purple-500">[</span>
+            <p className="text-gray-200 font-medium">150+ organizaciones</p>
+            <span className="text-purple-500">]</span>
           </div>
 
-          <h1 className="text-[3.6rem] font-bold text-white leading-tight">
-            Entrega de Contenido Descentralizada a
-            <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-blue-400 to-blue-500">
-              Velocidad Relámpago
-            </span>
-          </h1>
+          <div className="space-y-3">
+            <h1
+              className="text-4xl sm:text-5xl lg:text-[3.5rem] font-semibold text-white"
+              style={{ lineHeight: "1.1" }}
+            >
+              Entrega de Contenido
+              <br />
+              <span
+                className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-purple-500 to-purple-600"
+                style={{ letterSpacing: "-0.02em" }}
+              >
+                Descentralizada
+              </span>
+              <br />a velocidad relámpago
+            </h1>
+          </div>
 
-          <p className="text-lg lg:text-xl text-blue-200 leading-relaxed max-w-lg">
-            Almacenamiento descentralizado en Arkiv Network con entrega global
-            mediante Cloudflare. Paga solo por escrituras, no por lecturas ni
-            ancho de banda.
+          <p
+            className="text-base lg:text-lg text-slate-400 leading-relaxed max-w-xl"
+            style={{ lineHeight: "1.7", marginTop: "8px" }}
+          >
+            Almacenamiento descentralizado en{" "}
+            <span className="text-purple-400">Arkiv Network</span> con entrega
+            global mediante Cloudflare.
+            <span className="text-slate-300"> Paga solo por escrituras</span>,
+            no por lecturas ni ancho de banda.
           </p>
 
           <div className="flex items-center gap-2">
-            <Link href="/register" className="group px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl font-medium text-lg hover:from-blue-500 hover:to-blue-600 transition-all shadow-lg shadow-blue-600/30 hover:shadow-blue-500/40 flex items-center gap-2">
+            <Link
+              href="/register"
+              className="group px-8 py-4 bg-gradient-to-r from-purple-700 to-purple-600 text-white rounded-xl font-medium text-lg hover:from-purple-600 hover:to-purple-500 transition-all shadow-lg shadow-purple-700/40 hover:shadow-purple-600/50 flex items-center gap-2"
+            >
               Comienza gratis
               <svg
                 width="20"
@@ -43,15 +62,48 @@ export const HeroSection = () => {
                 />
               </svg>
             </Link>
-            <Link href="/api-docs" className="group px-8 py-4 text-white rounded-xl font-medium text-lg flex items-center gap-2 hover:underline">
+            <Link
+              href="/api-docs"
+              className="group px-7 py-3.5 text-slate-300 rounded-lg font-medium text-base flex items-center gap-2 hover:text-white hover:underline"
+            >
               Ver documentación
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 20 20"
+                fill="none"
+                className="opacity-60 group-hover:opacity-100 transition-opacity"
+              >
+                <path
+                  d="M10 15L15 10L10 5M15 10H5"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
             </Link>
           </div>
         </div>
 
-        <div className="relative h-[500px] lg:h-[600px] flex items-center justify-center">
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-80 h-[500px] bg-blue-400 rounded-full blur-[120px] opacity-30"></div>
+        <div
+          className="relative h-[420px] lg:h-[580px] flex items-center justify-center"
+          style={{ paddingLeft: "8px", paddingTop: "16px" }}
+        >
+          <div
+            className="absolute inset-0 flex items-center justify-center"
+            style={{ transform: "translateX(12px) translateY(-8px)" }}
+          >
+            <div
+              className="w-72 h-96 bg-purple-700 rounded-full blur-[140px] opacity-20"
+              style={{ transform: "rotate(12deg)" }}
+            />
+            <div
+              className="absolute w-64 h-80 bg-purple-600 rounded-full blur-[120px] opacity-15"
+              style={{
+                transform: "translateX(-20px) translateY(30px) rotate(-8deg)",
+              }}
+            />
           </div>
 
           <div className="relative" style={{ perspective: "1000px" }}>

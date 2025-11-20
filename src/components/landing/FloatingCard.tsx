@@ -47,9 +47,9 @@ export const FloatingCard: React.FC<FloatingCardProps> = ({
           left: `${shadowX - 10}px`,
           top: "350px",
           background: `radial-gradient(ellipse at center, 
-            rgba(59, 130, 246, 0.25) 0%, 
-            rgba(59, 130, 246, 0.15) 30%, 
-            rgba(59, 130, 246, 0.08) 50%,
+            rgba(107, 33, 168, 0.25) 0%, 
+            rgba(107, 33, 168, 0.15) 30%, 
+            rgba(124, 58, 237, 0.08) 50%,
             transparent 80%)`,
           filter: `blur(40px)`,
           opacity: 0.7,
@@ -75,18 +75,18 @@ export const FloatingCard: React.FC<FloatingCardProps> = ({
           className="absolute inset-0 rounded-3xl backdrop-blur-xl"
           style={{
             background: `linear-gradient(135deg, 
-              rgba(219, 234, 254, 0.75) 0%, 
-              rgba(191, 219, 254, 0.7) 20%,
-              rgba(219, 234, 254, 0.65) 50%,
-              rgba(219, 234, 254, 0.6) 80%,
-              rgba(191, 219, 254, 0.55) 100%)`,
-            border: `1px solid rgba(147, 197, 253, 0.5)`,
+              rgba(107, 33, 168, 0.2) 0%, 
+              rgba(124, 58, 237, 0.18) 20%,
+              rgba(139, 92, 246, 0.16) 50%,
+              rgba(124, 58, 237, 0.14) 80%,
+              rgba(107, 33, 168, 0.12) 100%)`,
+            border: `1px solid rgba(107, 33, 168, 0.4)`,
             backfaceVisibility: "hidden",
             boxShadow: `
-              0 30px 100px rgba(59, 130, 246, 0.5),
-              0 0 80px rgba(147, 197, 253, 0.4),
-              inset 0 1px 2px rgba(255, 255, 255, 0.8),
-              inset 0 -1px 2px rgba(147, 197, 253, 0.3)
+              0 30px 100px rgba(107, 33, 168, 0.3),
+              0 0 80px rgba(124, 58, 237, 0.25),
+              inset 0 1px 2px rgba(255, 255, 255, 0.3),
+              inset 0 -1px 2px rgba(107, 33, 168, 0.2)
             `,
             transform: "translateZ(20px)",
           }}
@@ -95,9 +95,9 @@ export const FloatingCard: React.FC<FloatingCardProps> = ({
             className="absolute inset-0 rounded-3xl pointer-events-none overflow-hidden"
             style={{
               background: `linear-gradient(180deg, 
-                rgba(219, 234, 254, 0.9) 0%, 
-                rgba(191, 219, 254, 0.6) 15%,
-                rgba(147, 197, 253, 0.3) 30%,
+                rgba(107, 33, 168, 0.25) 0%, 
+                rgba(124, 58, 237, 0.18) 15%,
+                rgba(139, 92, 246, 0.12) 30%,
                 transparent 60%,
                 transparent 100%)`,
               maskImage: `linear-gradient(180deg, black 0%, transparent 50%)`,
@@ -109,8 +109,8 @@ export const FloatingCard: React.FC<FloatingCardProps> = ({
             className="absolute top-0 left-0 right-0 h-12 rounded-t-3xl pointer-events-none overflow-hidden"
             style={{
               background: `linear-gradient(180deg, 
-                rgba(255, 255, 255, 0.8) 0%, 
-                rgba(219, 234, 254, 0.6) 50%,
+                rgba(107, 33, 168, 0.15) 0%,
+                rgba(124, 58, 237, 0.2) 50%)
                 transparent 100%)`,
             }}
           />
@@ -121,8 +121,8 @@ export const FloatingCard: React.FC<FloatingCardProps> = ({
               background: `linear-gradient(315deg, 
                 transparent 0%,
                 transparent 50%,
-                rgba(59, 130, 246, 0.2) 80%,
-                rgba(59, 130, 246, 0.3) 100%)`,
+                rgba(107, 33, 168, 0.15) 80%,
+                rgba(124, 58, 237, 0.2) 100%)`,
               maskImage: `linear-gradient(315deg, transparent 0%, black 40%)`,
               WebkitMaskImage: `linear-gradient(315deg, transparent 0%, black 40%)`,
             }}
@@ -148,8 +148,8 @@ export const FloatingCard: React.FC<FloatingCardProps> = ({
             <div
               style={{
                 filter: `drop-shadow(0 6px 12px rgba(0, 0, 0, 0.3)) 
-                         drop-shadow(0 0 16px rgba(255, 255, 255, 0.9))
-                         drop-shadow(2px 2px 4px rgba(59, 130, 246, 0.4))`,
+                         drop-shadow(0 0 16px rgba(107, 33, 168, 0.4))
+                         drop-shadow(2px 2px 4px rgba(124, 58, 237, 0.3))`,
                 transform: "translateZ(10px)",
               }}
             >
@@ -159,26 +159,14 @@ export const FloatingCard: React.FC<FloatingCardProps> = ({
         </div>
 
         <div
-          className="absolute -inset-2 rounded-3xl opacity-50 blur-xl pointer-events-none"
-          style={{
-            background: `linear-gradient(135deg, 
-              rgba(147, 197, 253, 0.8), 
-              rgba(219, 234, 254, 0.5), 
-              rgba(147, 197, 253, 0.8))`,
-            transform: "translateZ(-10px)",
-            filter: "blur(20px)",
-          }}
-        />
-
-        <div
           className="absolute inset-0 rounded-3xl pointer-events-none"
           style={{
             border: `2px solid transparent`,
             background: `linear-gradient(135deg, 
-              rgba(255, 255, 255, 0.4) 0%,
+              rgba(255, 255, 255, 0.2) 0%,
               transparent 25%,
               transparent 75%,
-              rgba(147, 197, 253, 0.3) 100%)`,
+              rgba(107, 33, 168, 0.2) 100%)`,
             backgroundClip: "padding-box",
             WebkitBackgroundClip: "padding-box",
             maskImage: `linear-gradient(135deg, black 0%, transparent 30%, transparent 70%, black 100%)`,
@@ -198,11 +186,11 @@ export const FloatingCards: React.FC = () => {
         className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-full pointer-events-none"
         style={{
           background: `linear-gradient(180deg, 
-            rgba(147, 197, 253, 0.9) 0%, 
-            rgba(191, 219, 254, 0.7) 20%, 
-            rgba(219, 234, 254, 0.5) 40%, 
-            rgba(147, 197, 253, 0.3) 60%,
-            rgba(59, 130, 246, 0.1) 80%,
+            rgba(107, 33, 168, 0.6) 0%, 
+            rgba(124, 58, 237, 0.5) 20%, 
+            rgba(139, 92, 246, 0.4) 40%, 
+            rgba(124, 58, 237, 0.25) 60%,
+            rgba(107, 33, 168, 0.1) 80%,
             transparent 100%)`,
           filter: `blur(80px)`,
           opacity: 0.9,
@@ -213,9 +201,9 @@ export const FloatingCards: React.FC = () => {
         className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-full pointer-events-none"
         style={{
           background: `linear-gradient(180deg, 
-            rgba(219, 234, 254, 1) 0%, 
-            rgba(191, 219, 254, 0.8) 25%, 
-            rgba(147, 197, 253, 0.5) 50%, 
+            rgba(107, 33, 168, 0.8) 0%, 
+            rgba(124, 58, 237, 0.6) 25%, 
+            rgba(139, 92, 246, 0.4) 50%, 
             transparent 100%)`,
           filter: `blur(50px)`,
           opacity: 0.7,
