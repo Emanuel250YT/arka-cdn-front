@@ -160,7 +160,14 @@ export class ArkaCDNClient {
   private refreshToken: string | null = null;
   private sessionType: SessionType;
 
-  constructor(baseUrl: string = 'http://localhost:4100/api', sessionType: SessionType = 'user') {
+  private baseURL =
+  (typeof process !== "undefined" && process.env.NEXT_PUBLIC_API_URL) ||
+  (typeof window !== "undefined"
+    ? (window as unknown as { __ARKA_CDN_API_URL__: string }).__ARKA_CDN_API_URL__
+    : undefined) ||
+  "/api";
+
+  constructor(baseUrl: string = this.baseURL, sessionType: SessionType = 'user') {
     this.baseUrl = baseUrl;
     this.sessionType = sessionType;
     if (typeof window !== 'undefined') {
