@@ -35,7 +35,7 @@ const fileFetcher = async ([fileId, client]: [string, ArkaCDNClient]): Promise<F
     throw new Error('No autenticado');
   }
   const response = await client.getFile(fileId);
-  return response.data;
+  return (response as { data: FileInfo }).data;
 };
 
 export const useFile = (client: ArkaCDNClient, fileId: string | null, isAuthenticated: boolean) => {

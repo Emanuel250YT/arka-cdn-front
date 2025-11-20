@@ -5,6 +5,7 @@ import { BackgroundEffects } from '@/components/landing/BackgroundEffects';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { useI18n } from '@/i18n/I18nProvider';
+import { Suspense } from 'react';
 
 export default function LoginPage() {
   const { t } = useI18n();
@@ -30,7 +31,9 @@ export default function LoginPage() {
           <span className="text-sm font-medium">{t('auth.common.backToHome')}</span>
         </Link>
 
-        <LoginForm />
+        <Suspense fallback={<div className="bg-gradient-to-br from-purple-900/20 to-purple-800/20 backdrop-blur-sm border border-purple-700/30 rounded-2xl p-8 shadow-2xl animate-pulse"><div className="h-96"></div></div>}>
+          <LoginForm />
+        </Suspense>
       </div>
     </div>
   );
