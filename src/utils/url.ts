@@ -1,4 +1,9 @@
-const API_BASE_URL = 'http://localhost:4100/api';
+const API_BASE_URL = 
+  (typeof process !== 'undefined' && process.env.NEXT_PUBLIC_API_URL) ||
+  (typeof window !== 'undefined'
+    ? (window as any).__ARKA_CDN_API_URL__
+    : undefined) ||
+  '/api';
 
 export function assembleFileUrl(fileUuid: string): string {
   if (!fileUuid) {
