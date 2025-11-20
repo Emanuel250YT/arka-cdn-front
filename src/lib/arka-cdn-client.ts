@@ -154,11 +154,27 @@ export interface FileJsonResponse {
 
 export type SessionType = 'test' | 'user';
 
+export interface RequestResponseData {
+  id: string;
+  method: string;
+  url: string;
+  requestHeaders?: Record<string, string>;
+  requestBody?: unknown;
+  responseStatus?: number;
+  responseHeaders?: Record<string, string>;
+  responseBody?: unknown;
+  timestamp: Date;
+  error?: string;
+}
+
+export type RequestResponseCallback = (data: RequestResponseData) => void;
+
 export class ArkaCDNClient {
   private baseUrl: string;
   private accessToken: string | null = null;
   private refreshToken: string | null = null;
   private sessionType: SessionType;
+  private requestResponseCallback?: RequestResponseCallback;
 
   private baseURL =
   (typeof process !== "undefined" && process.env.NEXT_PUBLIC_API_URL) ||
@@ -167,9 +183,10 @@ export class ArkaCDNClient {
     : undefined) ||
   "/api";
 
-  constructor(baseUrl: string = this.baseURL, sessionType: SessionType = 'user') {
+  constructor(baseUrl: string = this.baseURL, sessionType: SessionType = 'user', requestResponseCallback?: RequestResponseCallback) {
     this.baseUrl = baseUrl;
     this.sessionType = sessionType;
+    this.requestResponseCallback = requestResponseCallback;
     if (typeof window !== 'undefined') {
       const accessKey = sessionType === 'test' ? 'arka_test_access_token' : 'arka_user_access_token';
       const refreshKey = sessionType === 'test' ? 'arka_test_refresh_token' : 'arka_user_refresh_token';
@@ -179,50 +196,103 @@ export class ArkaCDNClient {
   }
 
   /**
+   * Establece el callback para capturar request/response
+   */
+  setRequestResponseCallback(callback: RequestResponseCallback | undefined) {
+    this.requestResponseCallback = callback;
+  }
+
+  /**
    * Registra un nuevo usuario
    */
   async register(email: string, password: string, name?: string) {
-    const response = await fetch(`${this.baseUrl}/auth/register`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password, name }),
-    });
+    const url = `${this.baseUrl}/auth/register`;
+    const requestBody = { email, password, name };
+    const headers = { 'Content-Type': 'application/json' };
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || 'Registration failed');
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(requestBody),
+      });
+
+      let responseBody: unknown = null;
+      try {
+        const text = await response.text();
+        try {
+          responseBody = JSON.parse(text);
+        } catch {
+          responseBody = text;
+        }
+      } catch {
+        responseBody = null;
+      }
+
+      if (!response.ok) {
+        throw new Error(
+          typeof responseBody === 'object' && responseBody !== null && 'message' in responseBody
+            ? String(responseBody.message)
+            : 'Registration failed'
+        );
+      }
+
+      return responseBody as { accessToken: string; refreshToken: string; user: { id: string; email: string; name?: string } };
+    } catch (error) {
+      throw error;
     }
-
-    return response.json();
   }
 
   /**
    * Inicia sesión y guarda los tokens
    */
   async login(email: string, password: string): Promise<LoginResponse> {
-    const response = await fetch(`${this.baseUrl}/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    });
+    const url = `${this.baseUrl}/auth/login`;
+    const requestBody = { email, password };
+    const headers = { 'Content-Type': 'application/json' };
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || 'Login failed');
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(requestBody),
+      });
+
+      let responseBody: unknown = null;
+      try {
+        const text = await response.text();
+        try {
+          responseBody = JSON.parse(text);
+        } catch {
+          responseBody = text;
+        }
+      } catch {
+        responseBody = null;
+      }
+
+      if (!response.ok) {
+        throw new Error(
+          typeof responseBody === 'object' && responseBody !== null && 'message' in responseBody
+            ? String(responseBody.message)
+            : 'Login failed'
+        );
+      }
+
+      const data = responseBody as LoginResponse;
+      this.accessToken = data.accessToken;
+      this.refreshToken = data.refreshToken;
+
+      if (typeof window !== 'undefined') {
+        const accessKey = this.sessionType === 'test' ? 'arka_test_access_token' : 'arka_user_access_token';
+        const refreshKey = this.sessionType === 'test' ? 'arka_test_refresh_token' : 'arka_user_refresh_token';
+        localStorage.setItem(accessKey, data.accessToken);
+        localStorage.setItem(refreshKey, data.refreshToken);
+      }
+
+      return data;
+    } catch (error) {
+      throw error;
     }
-
-    const data = await response.json();
-    this.accessToken = data.accessToken;
-    this.refreshToken = data.refreshToken;
-
-    if (typeof window !== 'undefined') {
-      const accessKey = this.sessionType === 'test' ? 'arka_test_access_token' : 'arka_user_access_token';
-      const refreshKey = this.sessionType === 'test' ? 'arka_test_refresh_token' : 'arka_user_refresh_token';
-      localStorage.setItem(accessKey, data.accessToken);
-      localStorage.setItem(refreshKey, data.refreshToken);
-    }
-
-    return data;
   }
 
   /**
@@ -233,29 +303,52 @@ export class ArkaCDNClient {
       throw new Error('No refresh token available');
     }
 
-    const response = await fetch(`${this.baseUrl}/auth/refresh`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ refreshToken: this.refreshToken }),
-    });
+    const url = `${this.baseUrl}/auth/refresh`;
+    const requestBody = { refreshToken: this.refreshToken };
+    const headers = { 'Content-Type': 'application/json' };
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || 'Token refresh failed');
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(requestBody),
+      });
+
+      let responseBody: unknown = null;
+      try {
+        const text = await response.text();
+        try {
+          responseBody = JSON.parse(text);
+        } catch {
+          responseBody = text;
+        }
+      } catch {
+        responseBody = null;
+      }
+
+      if (!response.ok) {
+        throw new Error(
+          typeof responseBody === 'object' && responseBody !== null && 'message' in responseBody
+            ? String(responseBody.message)
+            : 'Token refresh failed'
+        );
+      }
+
+      const data = responseBody as LoginResponse;
+      this.accessToken = data.accessToken;
+      this.refreshToken = data.refreshToken;
+
+      if (typeof window !== 'undefined') {
+        const accessKey = this.sessionType === 'test' ? 'arka_test_access_token' : 'arka_user_access_token';
+        const refreshKey = this.sessionType === 'test' ? 'arka_test_refresh_token' : 'arka_user_refresh_token';
+        localStorage.setItem(accessKey, data.accessToken);
+        localStorage.setItem(refreshKey, data.refreshToken);
+      }
+
+      return data;
+    } catch (error) {
+      throw error;
     }
-
-    const data = await response.json();
-    this.accessToken = data.accessToken;
-    this.refreshToken = data.refreshToken;
-
-    if (typeof window !== 'undefined') {
-      const accessKey = this.sessionType === 'test' ? 'arka_test_access_token' : 'arka_user_access_token';
-      const refreshKey = this.sessionType === 'test' ? 'arka_test_refresh_token' : 'arka_user_refresh_token';
-      localStorage.setItem(accessKey, data.accessToken);
-      localStorage.setItem(refreshKey, data.refreshToken);
-    }
-
-    return data;
   }
 
   /**
@@ -264,12 +357,58 @@ export class ArkaCDNClient {
   async logout() {
     if (!this.accessToken) return;
 
+    const requestId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const url = `${this.baseUrl}/auth/logout`;
+    const headers = { Authorization: `Bearer ${this.accessToken}` };
+
+    const requestData: RequestResponseData = {
+      id: requestId,
+      method: 'POST',
+      url,
+      requestHeaders: headers,
+      timestamp: new Date(),
+    };
+
     try {
-      await fetch(`${this.baseUrl}/auth/logout`, {
+      const response = await fetch(url, {
         method: 'POST',
-        headers: { Authorization: `Bearer ${this.accessToken}` },
+        headers,
       });
-    } catch {
+
+      const responseHeaders: Record<string, string> = {};
+      response.headers.forEach((value, key) => {
+        responseHeaders[key] = value;
+      });
+
+      let responseBody: unknown = null;
+      try {
+        const text = await response.text();
+        try {
+          responseBody = JSON.parse(text);
+        } catch {
+          responseBody = text;
+        }
+      } catch {
+        responseBody = null;
+      }
+
+      const finalData: RequestResponseData = {
+        ...requestData,
+        responseStatus: response.status,
+        responseHeaders,
+        responseBody,
+      };
+      if (this.requestResponseCallback) {
+        this.requestResponseCallback(finalData);
+      }
+    } catch (error) {
+      const errorData: RequestResponseData = {
+        ...requestData,
+        error: error instanceof Error ? error.message : 'Unknown error',
+      };
+      if (this.requestResponseCallback) {
+        this.requestResponseCallback(errorData);
+      }
     }
 
     this.accessToken = null;
@@ -302,6 +441,8 @@ export class ArkaCDNClient {
       throw new Error('Not authenticated. Call login() first.');
     }
 
+    const requestId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const url = `${this.baseUrl}/upload/file`;
     const formData = new FormData();
     formData.append('file', file);
     if (options.description) {
@@ -314,6 +455,30 @@ export class ArkaCDNClient {
       formData.append('ttl', String(options.ttl));
     }
 
+    // Capturar request body para el visualizador
+    const requestBody: Record<string, unknown> = {
+      file: {
+        name: file.name,
+        size: file.size,
+        type: file.type,
+        _isFile: true,
+      },
+    };
+    if (options.description) requestBody.description = options.description;
+    if (options.compress !== undefined) requestBody.compress = options.compress;
+    if (options.ttl) requestBody.ttl = options.ttl;
+
+    const requestData: RequestResponseData = {
+      id: requestId,
+      method: 'POST',
+      url,
+      requestHeaders: {
+        Authorization: `Bearer ${this.accessToken}`,
+      },
+      requestBody,
+      timestamp: new Date(),
+    };
+
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
 
@@ -325,28 +490,83 @@ export class ArkaCDNClient {
       });
 
       xhr.addEventListener('load', async () => {
+        const responseHeaders: Record<string, string> = {};
+        const allHeaders = xhr.getAllResponseHeaders();
+        if (allHeaders) {
+          allHeaders.split('\r\n').forEach((line) => {
+            const parts = line.split(': ');
+            if (parts.length === 2) {
+              responseHeaders[parts[0]] = parts[1];
+            }
+          });
+        }
+
         if (xhr.status >= 200 && xhr.status < 300) {
           try {
             const data = JSON.parse(xhr.responseText);
+            const finalData: RequestResponseData = {
+              ...requestData,
+              responseStatus: xhr.status,
+              responseHeaders,
+              responseBody: data,
+            };
+            if (this.requestResponseCallback) {
+              this.requestResponseCallback(finalData);
+            }
             resolve(data);
           } catch {
+            const errorData: RequestResponseData = {
+              ...requestData,
+              responseStatus: xhr.status,
+              responseHeaders,
+              error: 'Invalid response format',
+            };
+            if (this.requestResponseCallback) {
+              this.requestResponseCallback(errorData);
+            }
             reject(new Error('Invalid response format'));
           }
         } else {
           try {
             const error = JSON.parse(xhr.responseText);
+            const errorData: RequestResponseData = {
+              ...requestData,
+              responseStatus: xhr.status,
+              responseHeaders,
+              responseBody: error,
+              error: error.message || 'Upload failed',
+            };
+            if (this.requestResponseCallback) {
+              this.requestResponseCallback(errorData);
+            }
             reject(new Error(error.message || 'Upload failed'));
           } catch {
+            const errorData: RequestResponseData = {
+              ...requestData,
+              responseStatus: xhr.status,
+              responseHeaders,
+              error: `Upload failed: ${xhr.statusText}`,
+            };
+            if (this.requestResponseCallback) {
+              this.requestResponseCallback(errorData);
+            }
             reject(new Error(`Upload failed: ${xhr.statusText}`));
           }
         }
       });
 
       xhr.addEventListener('error', () => {
+        const errorData: RequestResponseData = {
+          ...requestData,
+          error: 'Network error',
+        };
+        if (this.requestResponseCallback) {
+          this.requestResponseCallback(errorData);
+        }
         reject(new Error('Network error'));
       });
 
-      xhr.open('POST', `${this.baseUrl}/upload/file`);
+      xhr.open('POST', url);
       xhr.setRequestHeader('Authorization', `Bearer ${this.accessToken}`);
       xhr.send(formData);
     });
@@ -356,14 +576,14 @@ export class ArkaCDNClient {
    * Obtiene el estado de subida de un archivo
    */
   async getUploadStatus(fileId: string): Promise<UploadStatus> {
-    return this.request('GET', `/upload/${fileId}/status`);
+    return this.request('GET', `/upload/${fileId}/status`) as Promise<UploadStatus>;
   }
 
   /**
    * Lista todos los archivos del usuario
    */
   async listFiles(): Promise<{ success: boolean; data: FileInfo[] }> {
-    return this.request('GET', '/upload');
+    return this.request('GET', '/upload') as Promise<{ success: boolean; data: FileInfo[] }>;
   }
 
   /**
@@ -398,28 +618,28 @@ export class ArkaCDNClient {
     return this.request('POST', '/upload/plain', {
       body: JSON.stringify({ data, filename, description }),
       headers: { 'Content-Type': 'application/json' },
-    });
+    }) as Promise<UploadResponse>;
   }
 
   /**
    * Obtiene el contenido de un archivo como texto
    */
   async getFileAsText(fileId: string): Promise<FileTextResponse> {
-    return this.request('GET', `/upload/${fileId}/text`);
+    return this.request('GET', `/upload/${fileId}/text`) as Promise<FileTextResponse>;
   }
 
   /**
    * Obtiene y parsea automáticamente un archivo JSON
    */
   async getFileAsJson(fileId: string): Promise<FileJsonResponse> {
-    return this.request('GET', `/upload/${fileId}/json`);
+    return this.request('GET', `/upload/${fileId}/json`) as Promise<FileJsonResponse>;
   }
 
   /**
    * Obtiene estadísticas del pool de subida y wallets
    */
   async getWalletPoolStats(): Promise<WalletPoolStats> {
-    return this.request('GET', '/upload/stats/wallet-pool');
+    return this.request('GET', '/upload/stats/wallet-pool') as Promise<WalletPoolStats>;
   }
 
   /**
@@ -432,7 +652,7 @@ export class ArkaCDNClient {
     return this.request('PUT', `/data/${entityKey}`, {
       body: JSON.stringify(updateData),
       headers: { 'Content-Type': 'application/json' },
-    });
+    }) as Promise<{ success: boolean; message: string; data: { entityKey: string; txHash: string } }>;
   }
 
   /**
@@ -450,7 +670,7 @@ export class ArkaCDNClient {
     }
     if (filters.limit) params.append('limit', String(filters.limit));
 
-    return this.request('GET', `/data/query?${params.toString()}`);
+    return this.request('GET', `/data/query?${params.toString()}`) as Promise<EntityQueryResponse>;
   }
 
   /**
@@ -463,58 +683,191 @@ export class ArkaCDNClient {
       body?: BodyInit;
       headers?: Record<string, string>;
     } = {}
-  ) {
+  ): Promise<unknown> {
     if (!this.accessToken) {
       throw new Error('Not authenticated. Call login() first.');
     }
 
+    const requestId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const url = `${this.baseUrl}${endpoint}`;
     const headers: Record<string, string> = {
       Authorization: `Bearer ${this.accessToken}`,
       ...options.headers,
     };
 
-    const response = await fetch(`${this.baseUrl}${endpoint}`, {
-      method,
-      headers,
-      body: options.body,
-    });
-
-    if (response.status === 401) {
-      try {
-        await this.refreshAccessToken();
-        headers.Authorization = `Bearer ${this.accessToken}`;
-
-        const retryResponse = await fetch(`${this.baseUrl}${endpoint}`, {
-          method,
-          headers,
-          body: options.body,
+    // Capturar request body
+    let requestBody: unknown = null;
+    if (options.body) {
+      if (options.body instanceof FormData) {
+        // Para FormData, crear un objeto con las claves
+        const formDataObj: Record<string, unknown> = {};
+        options.body.forEach((value, key) => {
+          if (value instanceof File) {
+            formDataObj[key] = {
+              name: value.name,
+              size: value.size,
+              type: value.type,
+              _isFile: true,
+            };
+          } else {
+            formDataObj[key] = value;
+          }
         });
-
-        if (!retryResponse.ok) {
-          const error = await retryResponse.json();
-          throw new Error(error.message || `Request failed: ${retryResponse.statusText}`);
+        requestBody = formDataObj;
+      } else if (typeof options.body === 'string') {
+        try {
+          requestBody = JSON.parse(options.body);
+        } catch {
+          requestBody = options.body;
         }
-
-        return retryResponse.json();
-      } catch (refreshError) {
-        this.accessToken = null;
-        this.refreshToken = null;
-        if (typeof window !== 'undefined') {
-          const accessKey = this.sessionType === 'test' ? 'arka_test_access_token' : 'arka_user_access_token';
-          const refreshKey = this.sessionType === 'test' ? 'arka_test_refresh_token' : 'arka_user_refresh_token';
-          localStorage.removeItem(accessKey);
-          localStorage.removeItem(refreshKey);
-        }
-        throw refreshError;
+      } else {
+        requestBody = options.body;
       }
     }
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || `Request failed: ${response.statusText}`);
-    }
+    const requestData: RequestResponseData = {
+      id: requestId,
+      method,
+      url,
+      requestHeaders: headers,
+      requestBody,
+      timestamp: new Date(),
+    };
 
-    return response.json();
+    try {
+      const response = await fetch(url, {
+        method,
+        headers,
+        body: options.body,
+      });
+
+      // Capturar response headers
+      const responseHeaders: Record<string, string> = {};
+      response.headers.forEach((value, key) => {
+        responseHeaders[key] = value;
+      });
+
+      if (response.status === 401) {
+        try {
+          await this.refreshAccessToken();
+          headers.Authorization = `Bearer ${this.accessToken}`;
+
+          const retryResponse = await fetch(url, {
+            method,
+            headers,
+            body: options.body,
+          });
+
+          // Capturar response headers del retry
+          const retryResponseHeaders: Record<string, string> = {};
+          retryResponse.headers.forEach((value, key) => {
+            retryResponseHeaders[key] = value;
+          });
+
+          let responseBody: unknown = null;
+          try {
+            const text = await retryResponse.text();
+            try {
+              responseBody = JSON.parse(text);
+            } catch {
+              responseBody = text;
+            }
+          } catch {
+            responseBody = null;
+          }
+
+          if (!retryResponse.ok) {
+            const error = await retryResponse.json().catch(() => ({ message: `Request failed: ${retryResponse.statusText}` }));
+            const errorData: RequestResponseData = {
+              ...requestData,
+              responseStatus: retryResponse.status,
+              responseHeaders: retryResponseHeaders,
+              responseBody: error,
+              error: error.message || `Request failed: ${retryResponse.statusText}`,
+            };
+            if (this.requestResponseCallback) {
+              this.requestResponseCallback(errorData);
+            }
+            throw new Error(error.message || `Request failed: ${retryResponse.statusText}`);
+          }
+
+          const finalData: RequestResponseData = {
+            ...requestData,
+            responseStatus: retryResponse.status,
+            responseHeaders: retryResponseHeaders,
+            responseBody,
+          };
+          if (this.requestResponseCallback) {
+            this.requestResponseCallback(finalData);
+          }
+
+          return responseBody;
+        } catch (refreshError) {
+          this.accessToken = null;
+          this.refreshToken = null;
+          if (typeof window !== 'undefined') {
+            const accessKey = this.sessionType === 'test' ? 'arka_test_access_token' : 'arka_user_access_token';
+            const refreshKey = this.sessionType === 'test' ? 'arka_test_refresh_token' : 'arka_user_refresh_token';
+            localStorage.removeItem(accessKey);
+            localStorage.removeItem(refreshKey);
+          }
+          throw refreshError;
+        }
+      }
+
+      let responseBody: unknown = null;
+      try {
+        const text = await response.text();
+        try {
+          responseBody = JSON.parse(text);
+        } catch {
+          responseBody = text;
+        }
+      } catch {
+        responseBody = null;
+      }
+
+      if (!response.ok) {
+        const errorData: RequestResponseData = {
+          ...requestData,
+          responseStatus: response.status,
+          responseHeaders,
+          responseBody,
+          error: typeof responseBody === 'object' && responseBody !== null && 'message' in responseBody
+            ? String(responseBody.message)
+            : `Request failed: ${response.statusText}`,
+        };
+        if (this.requestResponseCallback) {
+          this.requestResponseCallback(errorData);
+        }
+        throw new Error(
+          typeof responseBody === 'object' && responseBody !== null && 'message' in responseBody
+            ? String(responseBody.message)
+            : `Request failed: ${response.statusText}`
+        );
+      }
+
+      const finalData: RequestResponseData = {
+        ...requestData,
+        responseStatus: response.status,
+        responseHeaders,
+        responseBody,
+      };
+      if (this.requestResponseCallback) {
+        this.requestResponseCallback(finalData);
+      }
+
+      return responseBody;
+    } catch (error) {
+      const errorData: RequestResponseData = {
+        ...requestData,
+        error: error instanceof Error ? error.message : 'Unknown error',
+      };
+      if (this.requestResponseCallback) {
+        this.requestResponseCallback(errorData);
+      }
+      throw error;
+    }
   }
 
   /**
