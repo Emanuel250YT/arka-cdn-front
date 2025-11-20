@@ -73,16 +73,7 @@ export const Header = () => {
           >
             Playground
           </Link>
-          <Link
-            href="/api-docs"
-            className={`px-5 py-2 text-sm transition-colors rounded-full ${
-              isActive("/api-docs")
-                ? "text-purple-400 bg-purple-900/30 font-medium"
-                : "text-white hover:text-purple-400 hover:bg-purple-900/20"
-            }`}
-          >
-            Docs
-          </Link>
+          <DocsLink isActive={isActive} />
           <Link
             href="https://github.com/Emanuel250YT/arka-cdn"
             className="px-5 py-2 text-sm text-white hover:text-purple-400 transition-colors rounded-full hover:bg-purple-900/20"
@@ -126,5 +117,34 @@ export const Header = () => {
         </div>
       </nav>
     </header>
+  );
+};
+
+
+interface DocsLinkProps {
+  isActive: (path: string) => boolean;
+}
+
+export const DocsLink: React.FC<DocsLinkProps> = ({ isActive }) => {
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "";
+  const docsUrl = new URL("api-docs", apiUrl).toString();
+
+  const active = isActive("/api-docs");
+
+  const baseClasses =
+    "px-5 py-2 text-sm transition-colors rounded-full";
+  const activeClasses =
+    "text-purple-400 bg-purple-900/30 font-medium";
+  const inactiveClasses =
+    "text-white hover:text-purple-400 hover:bg-purple-900/20";
+
+  return (
+    <Link
+      href={docsUrl}
+      target="_blank"
+      className={`${baseClasses} ${active ? activeClasses : inactiveClasses}`}
+    >
+      API Docs
+    </Link>
   );
 };
