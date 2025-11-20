@@ -357,7 +357,7 @@ export const PersonalFilesManager = () => {
   }
 
   return (
-    <section id="personal-files" className="pb-20 lg:pb-28 scroll-mt-20">
+    <section id="personal-files" className="mb-8 scroll-mt-20">
       <div className="max-w-7xl mx-auto">
 
         <div className="backdrop-blur-sm rounded-2xl border border-purple-700/30 bg-gradient-to-br from-purple-900/20 to-purple-800/10 p-6 mb-8 shadow-2xl shadow-purple-900/20">
@@ -433,7 +433,6 @@ export const PersonalFilesManager = () => {
             </button>
           </div>
 
-          {/* Tabs */}
           <div className="flex gap-2 mb-6 border-b border-purple-700/30">
             <button
               onClick={() => {
@@ -849,7 +848,6 @@ export const PersonalFilesManager = () => {
           )}
         </div>
 
-        {/* Modal para ver contenido de archivo */}
         {viewingFileContent && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm" onClick={() => setViewingFileContent(null)}>
             <div className="bg-purple-950/50 border border-purple-600/50 rounded-2xl shadow-2xl w-full max-w-4xl mx-4 max-h-[90vh] overflow-hidden flex flex-col" onClick={(e) => e.stopPropagation()}>
@@ -857,7 +855,7 @@ export const PersonalFilesManager = () => {
                 <h3 className="text-xl font-semibold text-white">
                   {viewingFileContent.type === 'text' ? 'Contenido del archivo' : 'JSON del archivo'}
                 </h3>
-                <button onClick={() => setViewingFileContent(null)} className="text-purple-400/60 hover:text-purple-300 transition-colors p-2">
+                <button onClick={() => setViewingFileContent(null)} className="cursor-pointer text-purple-400/60 hover:text-purple-300 transition-colors p-2">
                   <X className="w-6 h-6" />
                 </button>
               </div>
@@ -876,13 +874,12 @@ export const PersonalFilesManager = () => {
           </div>
         )}
 
-        {/* Modal para estado de subida */}
         {uploadStatus && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm" onClick={() => setUploadStatus(null)}>
             <div className="bg-purple-950/50 border border-purple-600/50 rounded-2xl shadow-2xl w-full max-w-2xl mx-4 max-h-[90vh] overflow-hidden flex flex-col" onClick={(e) => e.stopPropagation()}>
               <div className="flex items-center justify-between p-6 border-b border-purple-700/30">
                 <h3 className="text-xl font-semibold text-white">Estado de subida</h3>
-                <button onClick={() => setUploadStatus(null)} className="text-purple-400/60 hover:text-purple-300 transition-colors p-2">
+                <button onClick={() => setUploadStatus(null)} className="cursor-pointer text-purple-400/60 hover:text-purple-300 transition-colors p-2">
                   <X className="w-6 h-6" />
                 </button>
               </div>
@@ -954,7 +951,7 @@ export const PersonalFilesManager = () => {
                   <BarChart3 className="w-5 h-5 text-purple-400" />
                   Estadísticas del Pool de Wallets
                 </h3>
-                <button onClick={() => setPoolStats(null)} className="text-purple-400/60 hover:text-purple-300 transition-colors p-2">
+                <button onClick={() => setPoolStats(null)} className="cursor-pointer text-purple-400/60 hover:text-purple-300 transition-colors p-2">
                   <X className="w-6 h-6" />
                 </button>
               </div>
