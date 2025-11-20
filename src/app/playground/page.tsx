@@ -27,9 +27,22 @@ export default function PlaygroundPage() {
         
         try {
           await client.login(email, password);
-        } catch {
-          await client.register(email, password, username);
-          await client.login(email, password);
+        } catch (loginError) {
+          try {
+            await client.register(email, password, username);
+            await client.login(email, password);
+          } catch (registerError) {
+            const errorMessage = registerError instanceof Error ? registerError.message : String(registerError);
+            if (errorMessage.toLowerCase().includes('email') && errorMessage.toLowerCase().includes('registrado')) {
+              try {
+                await client.login(email, password);
+              } catch {
+                throw loginError;
+              }
+            } else {
+              throw registerError;
+            }
+          }
         }
         
         setIsLoading(false);
