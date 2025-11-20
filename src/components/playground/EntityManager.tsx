@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useState } from "react";
-import { ArkaCDNClient } from "@/lib/arka-cdn-client";
+import { useState, useEffect } from "react";
+import { ArkaCDNClient, RequestResponseData } from "@/lib/arka-cdn-client";
 import { Database, Search, Edit, Loader2, X, CheckCircle2 } from "lucide-react";
+import { RequestResponseViewer } from "@/components/common/RequestResponseViewer";
 
 interface EntityManagerProps {
   client: ArkaCDNClient;
@@ -14,6 +15,7 @@ export const EntityManager = ({
   client,
   isAuthenticated,
 }: EntityManagerProps) => {
+  const [latestRequestResponse, setLatestRequestResponse] = useState<RequestResponseData | null>(null);
   const [queryFilters, setQueryFilters] = useState({
     type: "",
     fileName: "",
@@ -24,6 +26,15 @@ export const EntityManager = ({
   const [queryResults, setQueryResults] = useState<any[]>([]);
   const [loadingQuery, setLoadingQuery] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Configurar el callback del cliente
+  useEffect(() => {
+    if (client) {
+      client.setRequestResponseCallback((data) => {
+        setLatestRequestResponse(data);
+      });
+    }
+  }, [client]);
 
   const [editingEntity, setEditingEntity] = useState<{
     key: string;
@@ -439,6 +450,15 @@ export const EntityManager = ({
                 </div>
               )}
             </>
+          )}
+
+          {latestRequestResponse && (
+            <div className="mt-6">
+              <RequestResponseViewer 
+                data={latestRequestResponse}
+                onClose={() => setLatestRequestResponse(null)}
+              />
+            </div>
           )}
         </div>
       </div>
