@@ -1,0 +1,39 @@
+{
+  "header": {
+    "home": "Inicio",
+    "playground": "Playground",
+    "apiDocs": "API Docs",
+    "github": "GitHub",
+    "tryPlayground": "Try Playground",
+    "dashboard": "Dashboard",
+    "login": "Iniciar sesión",
+    "register": "Registrarse"
+  },
+  "hero": {
+    "organizations": "150+ organizaciones",
+    "title1": "Entrega de Contenido",
+    "title2": "Descentralizada",
+    "title3": "a velocidad relámpago",
+    "description": "Almacenamiento descentralizado en {network} con entrega global mediante Cloudflare.",
+    "network": "Arkiv Network",
+    "pricing": "Paga solo por escrituras",
+    "pricingDetail": "no por lecturas ni ancho de banda.",
+    "ctaStart": "Comienza gratis",
+    "ctaDocs": "Ver documentación"
+  },
+  "features": {
+    "ultraFast": {
+      "title": "Carga ultrarrápida",
+      "description": "Pool escalable de hasta 50,000 wallets trabajando en paralelo para subir tus archivos en tiempo récord."
+    },
+    "globalDelivery": {
+      "title": "Entrega global instantánea",
+      "description": "Cloudflare CDN para delivery ultrarrápido en cualquier parte del mundo. Cacheado automático después de la primera solicitud."
+    },
+    "secureBlockchain": {
+      "title": "Blockchain seguro",
+      "description": "Datos almacenados de forma inmutable en Arkiv Network con verificación criptográfica completa."
+    }
+  }
+}
+

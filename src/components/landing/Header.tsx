@@ -6,9 +6,12 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ArkaCDNClient } from "@/lib/arka-cdn-client";
 import { User, Menu, X } from "lucide-react";
+import { useI18n } from "@/i18n/I18nProvider";
+import { LanguageSelector } from "@/components/common/LanguageSelector";
 
 export const Header = () => {
   const pathname = usePathname();
+  const { t } = useI18n();
   const [client] = useState(() => new ArkaCDNClient(undefined, 'user'));
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     if (typeof window === 'undefined') return false;
@@ -16,9 +19,14 @@ export const Header = () => {
   });
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setIsLoading(true)
     const checkAuth = () => {
       setIsAuthenticated(client.isAuthenticated());
+      setIsLoading(false)
     };
     checkAuth();
     
@@ -73,7 +81,7 @@ export const Header = () => {
                 : "text-white hover:text-purple-400 hover:bg-purple-900/20"
             }`}
           >
-            Inicio
+            {t("header.home")}
           </Link>
           <Link
             href="/playground"
@@ -83,31 +91,32 @@ export const Header = () => {
                 : "text-white hover:text-purple-400 hover:bg-purple-900/20"
             }`}
           >
-            Playground
+            {t("header.playground")}
           </Link>
           <DocsLink isActive={isActive} />
           <Link
             href="https://github.com/Emanuel250YT/arka-cdn"
             className="px-5 py-2 text-sm text-white hover:text-purple-400 transition-colors rounded-full hover:bg-purple-900/20"
           >
-            GitHub
+            {t("header.github")}
           </Link>
         </div>
 
         <div className="hidden lg:flex items-center gap-3">
+          <LanguageSelector />
           <Link
             href="/playground"
             className="px-5 py-2.5 bg-gradient-to-r from-purple-700 to-purple-600 text-white text-sm rounded-full hover:from-purple-600 hover:to-purple-500 transition-all font-medium shadow-lg shadow-purple-700/30 hover:shadow-purple-700/40"
           >
-            Try Playground
+            {t("header.tryPlayground")}
           </Link>
-          {isAuthenticated ? (
+          {isAuthenticated && !isLoading ? (
             <Link
               href="/dashboard"
               className="px-5 py-2.5 bg-gradient-to-r from-purple-700 to-purple-600 text-white text-sm rounded-full hover:from-purple-600 hover:to-purple-500 transition-all font-medium shadow-lg shadow-purple-700/30 hover:shadow-purple-700/40 flex items-center gap-2"
             >
               <User className="w-4 h-4" />
-              Dashboard
+              {t("header.dashboard")}
             </Link>
           ) : (
             <div className="flex items-center gap-2.5">
@@ -115,13 +124,13 @@ export const Header = () => {
                 href="/login"
                 className="px-5 py-2 text-sm text-white transition-colors rounded-full hover:bg-purple-900/20"
               >
-                Iniciar sesión
+                {t("header.login")}
               </Link>
               <Link
                 href="/register"
                 className="px-5 py-2.5 bg-gradient-to-r from-purple-700 to-purple-600 text-white text-sm rounded-full hover:from-purple-600 hover:to-purple-500 transition-all font-medium shadow-lg shadow-purple-700/30"
               >
-                Registrarse
+                {t("header.register")}
               </Link>
             </div>
           )}
@@ -152,7 +161,7 @@ export const Header = () => {
                   : "text-white hover:text-purple-400 hover:bg-purple-900/20"
               }`}
             >
-              Inicio
+              {t("header.home")}
             </Link>
             <Link
               href="/playground"
@@ -163,7 +172,7 @@ export const Header = () => {
                   : "text-white hover:text-purple-400 hover:bg-purple-900/20"
               }`}
             >
-              Playground
+              {t("header.playground")}
             </Link>
             <Link
               href={new URL("api-docs", process.env.NEXT_PUBLIC_API_URL || "").toString()}
@@ -175,23 +184,26 @@ export const Header = () => {
                   : "text-white hover:text-purple-400 hover:bg-purple-900/20"
               }`}
             >
-              API Docs
+              {t("header.apiDocs")}
             </Link>
             <Link
               href="https://github.com/Emanuel250YT/arka-cdn"
               onClick={() => setIsMobileMenuOpen(false)}
               className="px-5 py-3 text-base text-white hover:text-purple-400 transition-colors rounded-full hover:bg-purple-900/20"
             >
-              GitHub
+              {t("header.github")}
             </Link>
             
             <div className="pt-4 border-t border-purple-900/30 flex flex-col gap-3">
+              <div className="flex justify-center">
+                <LanguageSelector />
+              </div>
               <Link
                 href="/playground"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="px-5 py-3 bg-gradient-to-r from-purple-700 to-purple-600 text-white text-base rounded-full hover:from-purple-600 hover:to-purple-500 transition-all font-medium shadow-lg shadow-purple-700/30 text-center"
               >
-                Try Playground
+                {t("header.tryPlayground")}
               </Link>
               {isAuthenticated ? (
                 <Link
@@ -200,7 +212,7 @@ export const Header = () => {
                   className="px-5 py-3 bg-gradient-to-r from-purple-700 to-purple-600 text-white text-base rounded-full hover:from-purple-600 hover:to-purple-500 transition-all font-medium shadow-lg shadow-purple-700/30 flex items-center justify-center gap-2"
                 >
                   <User className="w-4 h-4" />
-                  Dashboard
+                  {t("header.dashboard")}
                 </Link>
               ) : (
                 <>
@@ -209,14 +221,14 @@ export const Header = () => {
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="px-5 py-3 text-base text-white transition-colors rounded-full hover:bg-purple-900/20 text-center"
                   >
-                    Iniciar sesión
+                    {t("header.login")}
                   </Link>
                   <Link
                     href="/register"
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="px-5 py-3 bg-gradient-to-r from-purple-700 to-purple-600 text-white text-base rounded-full hover:from-purple-600 hover:to-purple-500 transition-all font-medium shadow-lg shadow-purple-700/30 text-center"
                   >
-                    Registrarse
+                    {t("header.register")}
                   </Link>
                 </>
               )}
@@ -234,6 +246,7 @@ interface DocsLinkProps {
 }
 
 export const DocsLink: React.FC<DocsLinkProps> = ({ isActive }) => {
+  const { t } = useI18n();
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || "";
   const docsUrl = new URL("api-docs", apiUrl).toString();
 
@@ -252,7 +265,7 @@ export const DocsLink: React.FC<DocsLinkProps> = ({ isActive }) => {
       target="_blank"
       className={`${baseClasses} ${active ? activeClasses : inactiveClasses}`}
     >
-      API Docs
+      {t("header.apiDocs")}
     </Link>
   );
 };

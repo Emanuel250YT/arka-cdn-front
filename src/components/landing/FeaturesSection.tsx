@@ -2,11 +2,12 @@
 
 import { Cloud, Gauge, ShieldCheck } from "lucide-react";
 import { JSX, useState, useEffect } from "react";
+import { useI18n } from "@/i18n/I18nProvider";
 
 interface Feature {
   icon: JSX.Element;
-  title: string;
-  description: string;
+  titleKey: string;
+  descriptionKey: string;
   rotation?: number;
   padding?: string;
   iconSize?: number;
@@ -16,9 +17,8 @@ interface Feature {
 const features: Feature[] = [
   {
     icon: <Gauge color="#7c3aed" />,
-    title: "Carga ultrarrápida",
-    description:
-      "Pool escalable de hasta 50,000 wallets trabajando en paralelo para subir tus archivos en tiempo récord.",
+    titleKey: "features.ultraFast.title",
+    descriptionKey: "features.ultraFast.description",
     rotation: -1.2,
     padding: "2.5rem",
     iconSize: 52,
@@ -26,9 +26,8 @@ const features: Feature[] = [
   },
   {
     icon: <Cloud color="#8b5cf6" />,
-    title: "Entrega global instantánea",
-    description:
-      "Cloudflare CDN para delivery ultrarrápido en cualquier parte del mundo. Cacheado automático después de la primera solicitud.",
+    titleKey: "features.globalDelivery.title",
+    descriptionKey: "features.globalDelivery.description",
     rotation: 0.8,
     padding: "2.75rem",
     iconSize: 56,
@@ -36,9 +35,8 @@ const features: Feature[] = [
   },
   {
     icon: <ShieldCheck color="#6b21a8" />,
-    title: "Blockchain seguro",
-    description:
-      "Datos almacenados de forma inmutable en Arkiv Network con verificación criptográfica completa.",
+    titleKey: "features.secureBlockchain.title",
+    descriptionKey: "features.secureBlockchain.description",
     rotation: -0.6,
     padding: "2.5rem",
     iconSize: 54,
@@ -47,6 +45,7 @@ const features: Feature[] = [
 ];
 
 export const FeaturesSection = () => {
+  const { t } = useI18n();
   const [windowWidth, setWindowWidth] = useState(1024);
 
   useEffect(() => {
@@ -113,13 +112,13 @@ export const FeaturesSection = () => {
                     </div>
                   </div>
 
-                  <h3 className="text-sm sm:text-base lg:text-lg xl:text-xl">{feature.title}</h3>
+                  <h3 className="text-sm sm:text-base lg:text-lg xl:text-xl">{t(feature.titleKey)}</h3>
                 </div>
                 <p
                   className="text-slate-400 leading-relaxed text-xs sm:text-sm lg:text-base"
                   style={{ lineHeight: "1.65" }}
                 >
-                  {feature.description}
+                  {t(feature.descriptionKey)}
                 </p>
               </div>
             </div>

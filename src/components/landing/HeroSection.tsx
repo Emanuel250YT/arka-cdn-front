@@ -1,14 +1,18 @@
+"use client";
+
 import Link from "next/link";
 import { FloatingCards } from "./FloatingCard";
+import { useI18n } from "@/i18n/I18nProvider";
 
 export const HeroSection = () => {
+  const { t } = useI18n();
   return (
     <section className="py-8 sm:py-12 md:py-16 lg:py-20">
       <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-8 sm:gap-12 md:gap-16 lg:gap-20 items-start">
         <div className="space-y-4 sm:space-y-5 lg:space-y-6">
           <div className="flex items-center gap-2">
             <span className="text-purple-500 text-sm sm:text-base">[</span>
-            <p className="text-gray-200 font-medium text-sm sm:text-base">150+ organizaciones</p>
+            <p className="text-gray-200 font-medium text-sm sm:text-base">{t("hero.organizations")}</p>
             <span className="text-purple-500 text-sm sm:text-base">]</span>
           </div>
 
@@ -17,15 +21,15 @@ export const HeroSection = () => {
               className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.5rem] font-semibold text-white leading-tight"
               style={{ lineHeight: "1.1" }}
             >
-              Entrega de Contenido
+              {t("hero.title1")}
               <br />
               <span
                 className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-purple-500 to-purple-600"
                 style={{ letterSpacing: "-0.02em" }}
               >
-                Descentralizada
+                {t("hero.title2")}
               </span>
-              <br />a velocidad relámpago
+              <br />{t("hero.title3")}
             </h1>
           </div>
 
@@ -33,11 +37,9 @@ export const HeroSection = () => {
             className="text-sm sm:text-base md:text-lg text-slate-400 max-w-xl"
             style={{ lineHeight: "1.7", marginTop: "8px" }}
           >
-            Almacenamiento descentralizado en{" "}
-            <span className="text-purple-400">Arkiv Network</span> con entrega
-            global mediante Cloudflare.
-            <span className="text-slate-300"> Paga solo por escrituras</span>,
-            no por lecturas ni ancho de banda.
+            {t("hero.description", { network: t("hero.network") })}
+            <span className="text-slate-300"> {t("hero.pricing")}</span>,{" "}
+            {t("hero.pricingDetail")}
           </p>
 
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-2 pt-2">
@@ -45,7 +47,7 @@ export const HeroSection = () => {
               href="/register"
               className="group px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-purple-700 to-purple-600 text-white rounded-xl font-medium text-base sm:text-lg hover:from-purple-600 hover:to-purple-500 transition-all shadow-lg shadow-purple-700/40 hover:shadow-purple-600/50 flex items-center justify-center gap-2"
             >
-              Comienza gratis
+              {t("hero.ctaStart")}
               <svg
                 width="20"
                 height="20"
@@ -66,7 +68,7 @@ export const HeroSection = () => {
               href="/api-docs"
               className="group px-6 sm:px-7 py-3 sm:py-3.5 text-slate-300 rounded-lg font-medium text-sm sm:text-base flex items-center justify-center gap-2 hover:text-white hover:underline"
             >
-              Ver documentación
+              {t("hero.ctaDocs")}
               <svg
                 width="16"
                 height="16"
