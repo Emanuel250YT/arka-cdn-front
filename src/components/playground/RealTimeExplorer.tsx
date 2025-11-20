@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ArkaCDNClient, FileInfo } from "@/lib/arka-cdn-client";
+import { ArkaCDNClient, FileInfo, RequestResponseData } from "@/lib/arka-cdn-client";
 import { assembleFileUrl } from "@/utils/url";
 import {
   ExternalLink,
@@ -17,6 +17,7 @@ import {
   X,
 } from "lucide-react";
 import { useFiles, useFile } from "@/hooks/useFiles";
+import { RequestResponseViewer } from "@/components/common/RequestResponseViewer";
 
 const PreviewModal = ({
   file,
@@ -331,7 +332,13 @@ const FileCard = ({
 };
 
 export const RealTimeExplorer = () => {
-  const [client] = useState(() => new ArkaCDNClient(undefined, "test"));
+  const [latestRequestResponse, setLatestRequestResponse] = useState<RequestResponseData | null>(null);
+  const [client] = useState(() => {
+    const c = new ArkaCDNClient(undefined, "test", (data) => {
+      setLatestRequestResponse(data);
+    });
+    return c;
+  });
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [expandedFiles, setExpandedFiles] = useState<Set<string>>(new Set());
   const [previewFile, setPreviewFile] = useState<FileInfo | null>(null);
@@ -341,15 +348,20 @@ export const RealTimeExplorer = () => {
   useEffect(() => {
     const authenticate = async () => {
       try {
+        const email = process.env.NEXT_PUBLIC_TEST_EMAIL;
+        const password = process.env.NEXT_PUBLIC_TEST_PASSWORD;
+        const username = process.env.NEXT_PUBLIC_TEST_USERNAME;
+
+        if (!email || !password || !username) {
+          console.error('Las credenciales de test no están configuradas.');
+          return;
+        }
+
         try {
-          await client.login("test@cloudycoding.com", "test12345678");
+          await client.login(email, password);
         } catch {
-          await client.register(
-            "test@cloudycoding.com",
-            "test12345678",
-            "Test User"
-          );
-          await client.login("test@cloudycoding.com", "test12345678");
+          await client.register(email, password, username);
+          await client.login(email, password);
         }
         setIsAuthenticated(true);
       } catch {
@@ -395,7 +407,7 @@ export const RealTimeExplorer = () => {
                   Uploaded files
                 </h2>
                 <p className="text-xs sm:text-sm text-purple-400/70 break-all">
-                  Account: test@cloudycoding.com
+                  Account: {process.env.NEXT_PUBLIC_TEST_EMAIL || 'test@cloudycoding.com'}
                 </p>
               </div>
             </div>
@@ -488,6 +500,15 @@ export const RealTimeExplorer = () => {
           isOpen={previewFile !== null}
           onClose={() => setPreviewFile(null)}
         />
+
+        {latestRequestResponse && (
+          <div className="mt-6">
+            <RequestResponseViewer 
+              data={latestRequestResponse}
+              onClose={() => setLatestRequestResponse(null)}
+            />
+          </div>
+        )}
       </div>
     </section>
   );
