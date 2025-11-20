@@ -1,3 +1,5 @@
+"use client";
+
 import { LoginForm } from '@/components/auth/LoginForm';
 import { BackgroundEffects } from '@/components/landing/BackgroundEffects';
 import Link from 'next/link';

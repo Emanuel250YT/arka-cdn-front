@@ -1,3 +1,5 @@
+"use client";
+
 import { RegisterForm } from '@/components/auth/RegisterForm';
 import { BackgroundEffects } from '@/components/landing/BackgroundEffects';
 import Link from 'next/link';
