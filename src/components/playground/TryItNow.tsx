@@ -1,17 +1,24 @@
 'use client';
 
 import { useState, useRef, useCallback } from 'react';
-import { ArkaCDNClient, UploadResponse } from '@/lib/arka-cdn-client';
+import { ArkaCDNClient, UploadResponse, RequestResponseData } from '@/lib/arka-cdn-client';
 import { assembleFileUrl } from '@/utils/url';
 import { Upload, CheckCircle2, ExternalLink, UploadCloud, X, Loader2, FileText, File } from 'lucide-react';
 import Link from 'next/link';
+import { RequestResponseViewer } from '@/components/common/RequestResponseViewer';
 
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
 
 type UploadMode = 'file' | 'text';
 
 export const TryItNow = () => {
-  const [client] = useState(() => new ArkaCDNClient(undefined, 'test'));
+  const [latestRequestResponse, setLatestRequestResponse] = useState<RequestResponseData | null>(null);
+  const [client] = useState(() => {
+    const c = new ArkaCDNClient(undefined, 'test', (data) => {
+      setLatestRequestResponse(data);
+    });
+    return c;
+  });
   const [uploadMode, setUploadMode] = useState<UploadMode>('file');
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -28,12 +35,20 @@ export const TryItNow = () => {
   const ensureAuthenticated = useCallback(async () => {
     setIsAuthenticating(true);
     try {
+      const email = process.env.NEXT_PUBLIC_TEST_EMAIL;
+      const password = process.env.NEXT_PUBLIC_TEST_PASSWORD;
+      const username = process.env.NEXT_PUBLIC_TEST_USERNAME;
+
+      if (!email || !password || !username) {
+        throw new Error('Las credenciales de test no están configuradas. Por favor, configure las variables de entorno.');
+      }
+
       try {
-        await client.login('test@cloudycoding.com', 'test12345678');
+        await client.login(email, password);
       } catch {
         try {
-          await client.register('test@cloudycoding.com', 'test12345678', 'Test User');
-          await client.login('test@cloudycoding.com', 'test12345678');
+          await client.register(email, password, username);
+          await client.login(email, password);
         } catch {
           throw new Error('No se pudo autenticar. Por favor, intente más tarde.');
         }
@@ -399,6 +414,13 @@ export const TryItNow = () => {
                   <p className="text-red-300 text-sm">{error}</p>
                 </div>
               )}
+
+              {latestRequestResponse && (
+                <RequestResponseViewer 
+                  data={latestRequestResponse}
+                  onClose={() => setLatestRequestResponse(null)}
+                />
+              )}
             </>
           ) : (
             <div className="space-y-4 sm:space-y-6 animate-fade-in">
@@ -497,6 +519,13 @@ export const TryItNow = () => {
                   Upload another
                 </button>
               </div>
+
+              {latestRequestResponse && (
+                <RequestResponseViewer 
+                  data={latestRequestResponse}
+                  onClose={() => setLatestRequestResponse(null)}
+                />
+              )}
             </div>
           )}
         </div>
