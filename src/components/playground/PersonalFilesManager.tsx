@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { ArkaCDNClient, FileInfo, UploadResponse } from '@/lib/arka-cdn-client';
+import { ArkaCDNClient, FileInfo, UploadResponse, RequestResponseData } from '@/lib/arka-cdn-client';
 import { assembleFileUrl } from '@/utils/url';
 import {
   User,
@@ -27,11 +27,18 @@ import {
   Database,
 } from 'lucide-react';
 import Link from 'next/link';
+import { RequestResponseViewer } from '@/components/common/RequestResponseViewer';
 
 const MAX_FILE_SIZE = 50 * 1024 * 1024;
 
 export const PersonalFilesManager = () => {
-  const [personalClient] = useState(() => new ArkaCDNClient(undefined, 'user'));
+  const [latestRequestResponse, setLatestRequestResponse] = useState<RequestResponseData | null>(null);
+  const [personalClient] = useState(() => {
+    const c = new ArkaCDNClient(undefined, 'user', (data) => {
+      setLatestRequestResponse(data);
+    });
+    return c;
+  });
   const [files, setFiles] = useState<FileInfo[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -80,7 +87,13 @@ export const PersonalFilesManager = () => {
         setIsAuthenticated(true);
         try {
           const profile = await personalClient.getProfile();
-          setUserProfile(profile.data || profile);
+          const { id, email, name } =
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (profile && (profile as any).data
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              ? (profile as any).data
+              : profile) as { id: string; email: string; name?: string };
+          setUserProfile({ id, email, name });
         } catch {
           await personalClient.logout();
           setIsAuthenticated(false);
@@ -1072,6 +1085,15 @@ export const PersonalFilesManager = () => {
                 </div>
               </div>
             </div>
+          </div>
+        )}
+
+        {latestRequestResponse && (
+          <div className="mt-6">
+            <RequestResponseViewer 
+              data={latestRequestResponse}
+              onClose={() => setLatestRequestResponse(null)}
+            />
           </div>
         )}
       </div>
