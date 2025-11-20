@@ -21,7 +21,7 @@ export function FounderCard({
 
   return (
     <div
-      className={`rounded-xl flex flex-col gap-5 p-4 sm:p-6 md:p-8 transition-all bg-[#0d0d0d]`}
+      className={`rounded-xl flex flex-col gap-5 p-4 sm:p-6 md:p-8 transition-all bg-purple-950/10 border border-purple-950/30`}
     >
       {!isDownDirection && (
         <Image
