@@ -4,8 +4,10 @@ import { RegisterForm } from '@/components/auth/RegisterForm';
 import { BackgroundEffects } from '@/components/landing/BackgroundEffects';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
+import { useI18n } from '@/i18n/I18nProvider';
 
 export default function RegisterPage() {
+  const { t } = useI18n();
   return (
     <div
       className="min-h-screen relative overflow-hidden flex items-center justify-center"
@@ -25,7 +27,7 @@ export default function RegisterPage() {
           className="inline-flex items-center gap-2 text-purple-400 hover:text-purple-300 transition-colors mb-8"
         >
           <ArrowLeft className="w-5 h-5" />
-          <span className="text-sm font-medium">Volver al inicio</span>
+          <span className="text-sm font-medium">{t('auth.common.backToHome')}</span>
         </Link>
 
         <RegisterForm />

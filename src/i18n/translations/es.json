@@ -34,6 +34,60 @@
       "title": "Blockchain seguro",
       "description": "Datos almacenados de forma inmutable en Arkiv Network con verificación criptográfica completa."
     }
+  },
+  "auth": {
+    "login": {
+      "title": "Iniciar sesión",
+      "subtitle": "Accede a tu cuenta de Arka CDN",
+      "email": "Email",
+      "password": "Contraseña",
+      "emailPlaceholder": "tu@email.com",
+      "passwordPlaceholder": "Tu contraseña",
+      "submit": "Iniciar sesión",
+      "submitting": "Iniciando sesión...",
+      "noAccount": "¿No tienes una cuenta?",
+      "registerLink": "Regístrate",
+      "continueDemo": "Continuar sin cuenta (modo demo)",
+      "errors": {
+        "required": "Email y contraseña son requeridos",
+        "invalidCredentials": "Error al iniciar sesión. Verifica tus credenciales."
+      },
+      "success": {
+        "title": "¡Cuenta creada exitosamente!",
+        "message": "Ahora puedes iniciar sesión"
+      }
+    },
+    "register": {
+      "title": "Crear cuenta",
+      "subtitle": "Únete a Arka CDN y comienza a usar el almacenamiento descentralizado",
+      "name": "Nombre (opcional)",
+      "namePlaceholder": "Tu nombre",
+      "email": "Email",
+      "password": "Contraseña",
+      "confirmPassword": "Confirmar contraseña",
+      "emailPlaceholder": "tu@email.com",
+      "passwordPlaceholder": "Mínimo 6 caracteres",
+      "confirmPasswordPlaceholder": "Repite tu contraseña",
+      "submit": "Crear cuenta",
+      "submitting": "Creando cuenta...",
+      "hasAccount": "¿Ya tienes una cuenta?",
+      "loginLink": "Inicia sesión",
+      "errors": {
+        "required": "Email y contraseña son requeridos",
+        "invalidEmail": "Email inválido",
+        "passwordLength": "La contraseña debe tener al menos 6 caracteres",
+        "passwordMismatch": "Las contraseñas no coinciden",
+        "registerError": "Error al registrar usuario"
+      },
+      "success": {
+        "title": "¡Cuenta creada exitosamente!",
+        "message": "Redirigiendo..."
+      }
+    },
+    "common": {
+      "backToHome": "Volver al inicio",
+      "required": "*"
+    }
   }
 }
 

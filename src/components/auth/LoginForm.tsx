@@ -5,10 +5,12 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { ArkaCDNClient } from '@/lib/arka-cdn-client';
 import { Mail, Lock, Loader2, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { useI18n } from '@/i18n/I18nProvider';
 
 export const LoginForm = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { t } = useI18n();
   const [client] = useState(() => new ArkaCDNClient(undefined, 'user'));
   const [formData, setFormData] = useState({
     email: '',
@@ -30,7 +32,7 @@ export const LoginForm = () => {
     setShowRegisteredMessage(false);
 
     if (!formData.email || !formData.password) {
-      setError('Email y contraseña son requeridos');
+      setError(t('auth.login.errors.required'));
       return;
     }
 
@@ -43,7 +45,7 @@ export const LoginForm = () => {
       router.push(redirectTo);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      setError(err.message || 'Error al iniciar sesión. Verifica tus credenciales.');
+      setError(err.message || t('auth.login.errors.invalidCredentials'));
     } finally {
       setLoading(false);
     }
@@ -52,16 +54,16 @@ export const LoginForm = () => {
   return (
     <div className="bg-gradient-to-br from-purple-900/20 to-purple-800/20 backdrop-blur-sm border border-purple-700/30 rounded-2xl p-8 shadow-2xl">
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-white mb-2">Iniciar sesión</h1>
-        <p className="text-purple-300">Accede a tu cuenta de Arka CDN</p>
+        <h1 className="text-3xl font-bold text-white mb-2">{t('auth.login.title')}</h1>
+        <p className="text-purple-300">{t('auth.login.subtitle')}</p>
       </div>
 
       {showRegisteredMessage && (
         <div className="mb-6 bg-green-900/20 border border-green-700/50 rounded-lg p-4 flex items-start gap-3 animate-fade-in">
           <CheckCircle2 className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
           <div>
-            <p className="text-green-300 font-medium">¡Cuenta creada exitosamente!</p>
-            <p className="text-green-400 text-sm mt-1">Ahora puedes iniciar sesión</p>
+            <p className="text-green-300 font-medium">{t('auth.login.success.title')}</p>
+            <p className="text-green-400 text-sm mt-1">{t('auth.login.success.message')}</p>
           </div>
         </div>
       )}
@@ -76,7 +78,7 @@ export const LoginForm = () => {
       <form onSubmit={handleSubmit} className="space-y-5">
         <div>
           <label htmlFor="email" className="block text-sm font-medium text-purple-300 mb-2">
-            Email
+            {t('auth.login.email')}
           </label>
           <div className="relative">
             <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-purple-400" />
@@ -87,7 +89,7 @@ export const LoginForm = () => {
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               required
               className="w-full pl-10 pr-4 py-3 border border-purple-700/50 rounded-lg text-white placeholder-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
-              placeholder="tu@email.com"
+              placeholder={t('auth.login.emailPlaceholder')}
               disabled={loading}
               autoComplete="email"
             />
@@ -96,7 +98,7 @@ export const LoginForm = () => {
 
         <div>
           <label htmlFor="password" className="block text-sm font-medium text-purple-300 mb-2">
-            Contraseña
+            {t('auth.login.password')}
           </label>
           <div className="relative">
             <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-purple-400" />
@@ -107,7 +109,7 @@ export const LoginForm = () => {
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
               required
               className="w-full pl-10 pr-4 py-3 border border-purple-700/50 rounded-lg text-white placeholder-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
-              placeholder="Tu contraseña"
+              placeholder={t('auth.login.passwordPlaceholder')}
               disabled={loading}
               autoComplete="current-password"
             />
@@ -122,26 +124,26 @@ export const LoginForm = () => {
           {loading ? (
             <>
               <Loader2 className="w-5 h-5 animate-spin" />
-              Iniciando sesión...
+              {t('auth.login.submitting')}
             </>
           ) : (
-            'Iniciar sesión'
+            t('auth.login.submit')
           )}
         </button>
       </form>
 
       <div className="mt-6 space-y-3 text-center">
         <p className="text-purple-300 text-sm">
-          ¿No tienes una cuenta?{' '}
+          {t('auth.login.noAccount')}{' '}
           <Link href="/register" className="text-purple-400 hover:text-purple-300 font-medium transition-colors">
-            Regístrate
+            {t('auth.login.registerLink')}
           </Link>
         </p>
         <Link
           href="/playground"
           className="block text-purple-400 hover:text-purple-300 text-sm transition-colors"
         >
-          Continuar sin cuenta (modo demo)
+          {t('auth.login.continueDemo')}
         </Link>
       </div>
     </div>

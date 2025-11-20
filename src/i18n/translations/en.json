@@ -34,6 +34,60 @@
       "title": "Secure blockchain",
       "description": "Data stored immutably on Arkiv Network with complete cryptographic verification."
     }
+  },
+  "auth": {
+    "login": {
+      "title": "Log in",
+      "subtitle": "Access your Arka CDN account",
+      "email": "Email",
+      "password": "Password",
+      "emailPlaceholder": "your@email.com",
+      "passwordPlaceholder": "Your password",
+      "submit": "Log in",
+      "submitting": "Logging in...",
+      "noAccount": "Don't have an account?",
+      "registerLink": "Sign up",
+      "continueDemo": "Continue without account (demo mode)",
+      "errors": {
+        "required": "Email and password are required",
+        "invalidCredentials": "Error logging in. Please verify your credentials."
+      },
+      "success": {
+        "title": "Account created successfully!",
+        "message": "You can now log in"
+      }
+    },
+    "register": {
+      "title": "Create account",
+      "subtitle": "Join Arka CDN and start using decentralized storage",
+      "name": "Name (optional)",
+      "namePlaceholder": "Your name",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm password",
+      "emailPlaceholder": "your@email.com",
+      "passwordPlaceholder": "Minimum 6 characters",
+      "confirmPasswordPlaceholder": "Repeat your password",
+      "submit": "Create account",
+      "submitting": "Creating account...",
+      "hasAccount": "Already have an account?",
+      "loginLink": "Log in",
+      "errors": {
+        "required": "Email and password are required",
+        "invalidEmail": "Invalid email",
+        "passwordLength": "Password must be at least 6 characters",
+        "passwordMismatch": "Passwords do not match",
+        "registerError": "Error registering user"
+      },
+      "success": {
+        "title": "Account created successfully!",
+        "message": "Redirecting..."
+      }
+    },
+    "common": {
+      "backToHome": "Back to home",
+      "required": "*"
+    }
   }
 }
 
