@@ -3,13 +3,13 @@
 import { BackgroundEffects } from "@/components/landing/BackgroundEffects";
 import { Header } from "@/components/landing/Header";
 import { PersonalFilesManager } from "@/components/playground/PersonalFilesManager";
-import { EntityManager } from "@/components/playground/EntityManager";
+// import { EntityManager } from "@/components/playground/EntityManager";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
-import { useState } from "react";
-import { ArkaCDNClient } from "@/lib/arka-cdn-client";
+// import { useState } from "react";
+// import { ArkaCDNClient } from "@/lib/arka-cdn-client";
 
 export default function DashboardPage() {
-  const [client] = useState(() => new ArkaCDNClient(undefined, 'user'));
+  // const [client] = useState(() => new ArkaCDNClient(undefined, "user"));
 
   return (
     <ProtectedRoute>
@@ -35,7 +35,7 @@ export default function DashboardPage() {
           }}
         >
           <Header />
-          
+
           <section className="py-12 lg:py-20">
             <div className="max-w-4xl mx-auto text-center space-y-6 mb-12">
               <div className="flex items-center justify-center gap-2">
@@ -55,19 +55,17 @@ export default function DashboardPage() {
               </h1>
 
               <p className="text-lg text-slate-400 max-w-2xl mx-auto">
-                Administra, visualiza y comparte tus archivos de forma segura con Arka CDN
+                Administra, visualiza y comparte tus archivos de forma segura
+                con Arka CDN
               </p>
             </div>
           </section>
 
           <PersonalFilesManager />
-          
-          <section className="py-12 lg:py-20">
-            <EntityManager client={client} isAuthenticated={true} />
-          </section>
+
+          {/* <EntityManager client={client} isAuthenticated={true} /> */}
         </div>
       </div>
     </ProtectedRoute>
   );
 }
-
