@@ -582,8 +582,9 @@ export class ArkaCDNClient {
   /**
    * Lista todos los archivos del usuario
    */
-  async listFiles(): Promise<{ success: boolean; data: FileInfo[] }> {
-    return this.request('GET', '/upload') as Promise<{ success: boolean; data: FileInfo[] }>;
+  async listFiles(includePending: boolean = true): Promise<{ success: boolean; data: FileInfo[] }> {
+    const endpoint = includePending ? '/upload?includePending=true' : '/upload';
+    return this.request('GET', endpoint) as Promise<{ success: boolean; data: FileInfo[] }>;
   }
 
   /**
