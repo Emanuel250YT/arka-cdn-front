@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Cliente SDK para Arka CDN
  * Proporciona una interfaz simple para interactuar con la API de Arka CDN
@@ -77,6 +78,79 @@ export interface UploadOptions {
   description?: string;
   compress?: boolean;
   ttl?: number;
+}
+
+export interface WalletQueue {
+  queueIndex: number;
+  walletAddress: string;
+  pendingChunks: number;
+  isProcessing: boolean;
+  successCount: number;
+  failedCount?: number;
+  errorCount?: number;
+}
+
+export interface WalletPoolStats {
+  success: boolean;
+  data: {
+    queues: WalletQueue[];
+    totalWallets: number;
+  };
+}
+
+export interface EntityUpdateData {
+  title?: string;
+  content?: string;
+  description?: string;
+  expirationHours?: number;
+  customData?: Record<string, unknown>;
+}
+
+export interface EntityQueryFilters {
+  type?: string;
+  fileName?: string;
+  withAttributes?: boolean;
+  withPayload?: boolean;
+  limit?: number;
+}
+
+export interface EntityQueryResponse {
+  success: boolean;
+  message: string;
+  data: Array<{
+    entityKey: string;
+    attributes?: Record<string, unknown>;
+    payload?: {
+      data: string;
+    };
+    createdAt: number;
+  }>;
+  meta: {
+    total: number;
+    filters: Record<string, unknown>;
+    options: Record<string, unknown>;
+  };
+}
+
+export interface FileTextResponse {
+  success: boolean;
+  data: {
+    fileId: string;
+    originalName: string;
+    mimeType: string;
+    size: number;
+    content: string;
+    encoding: string;
+  };
+}
+
+export interface FileJsonResponse {
+  success: boolean;
+  data: {
+    fileId: string;
+    originalName: string;
+    data: unknown;
+  };
 }
 
 export type SessionType = 'test' | 'user';
@@ -305,6 +379,72 @@ export class ArkaCDNClient {
    */
   getPublicUrl(fileId: string): string {
     return assembleFileUrl(fileId);
+  }
+
+  /**
+   * Sube datos en texto plano o JSON
+   */
+  async uploadPlainText(
+    data: string | object,
+    filename: string,
+    description?: string
+  ): Promise<UploadResponse> {
+    return this.request('POST', '/upload/plain', {
+      body: JSON.stringify({ data, filename, description }),
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
+  /**
+   * Obtiene el contenido de un archivo como texto
+   */
+  async getFileAsText(fileId: string): Promise<FileTextResponse> {
+    return this.request('GET', `/upload/${fileId}/text`);
+  }
+
+  /**
+   * Obtiene y parsea automáticamente un archivo JSON
+   */
+  async getFileAsJson(fileId: string): Promise<FileJsonResponse> {
+    return this.request('GET', `/upload/${fileId}/json`);
+  }
+
+  /**
+   * Obtiene estadísticas del pool de subida y wallets
+   */
+  async getWalletPoolStats(): Promise<WalletPoolStats> {
+    return this.request('GET', '/upload/stats/wallet-pool');
+  }
+
+  /**
+   * Actualiza una entidad existente en Arkiv Network
+   */
+  async updateEntity(
+    entityKey: string,
+    updateData: EntityUpdateData
+  ): Promise<{ success: boolean; message: string; data: { entityKey: string; txHash: string } }> {
+    return this.request('PUT', `/data/${entityKey}`, {
+      body: JSON.stringify(updateData),
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
+  /**
+   * Consulta entidades en Arkiv Network usando filtros
+   */
+  async queryEntities(filters: EntityQueryFilters): Promise<EntityQueryResponse> {
+    const params = new URLSearchParams();
+    if (filters.type) params.append('type', filters.type);
+    if (filters.fileName) params.append('fileName', filters.fileName);
+    if (filters.withAttributes !== undefined) {
+      params.append('withAttributes', String(filters.withAttributes));
+    }
+    if (filters.withPayload !== undefined) {
+      params.append('withPayload', String(filters.withPayload));
+    }
+    if (filters.limit) params.append('limit', String(filters.limit));
+
+    return this.request('GET', `/data/query?${params.toString()}`);
   }
 
   /**
