@@ -35,6 +35,66 @@
       "description": "Datos almacenados de forma inmutable en Arkiv Network con verificación criptográfica completa."
     }
   },
+  "mission": {
+    "title": "Nuestra Misión",
+    "description": "Democratizar el almacenamiento descentralizado haciendo que la tecnología blockchain sea accesible para todos. Creemos en un futuro donde los datos sean verdaderamente propiedad de sus dueños, sin intermediarios ni puntos únicos de falla.",
+    "values": {
+      "decentralization": {
+        "title": "Descentralización",
+        "description": "Construimos sobre blockchain para garantizar que tus datos sean verdaderamente tuyos."
+      },
+      "accessibility": {
+        "title": "Accesibilidad",
+        "description": "Hacemos que la tecnología avanzada sea simple y fácil de usar para todos."
+      },
+      "innovation": {
+        "title": "Innovación",
+        "description": "Pioneros en combinar blockchain con CDN para el mejor rendimiento posible."
+      }
+    }
+  },
+  "founder": {
+    "title": "Conoce a nuestros fundadores",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+  },
+  "founder1": {
+    "name": "Emanuel Guzmán",
+    "description": "Visionario tecnológico que impulsa la innovación en la intersección de deportes y tecnología.",
+    "role": "Co-Founder - CMO",
+    "image": "/arkacdn.png"
+  },
+  "founder2": {
+    "name": "Mariano Velarde",
+    "description": "Gurú de marketing con habilidad para construir conexiones sólidas en la comunidad",
+    "role": "Co-Founder - CMO",
+    "image": "/arkacdn.png"
+  },
+  "footer": {
+    "description": "Almacenamiento descentralizado rápido y confiable impulsado por tecnología blockchain Arkiv.",
+    "links": {
+      "product": "Producto",
+      "features": "Características",
+      "playground": "Playground",
+      "apiDocs": "API Docs",
+      "company": "Empresa",
+      "about": "Acerca de",
+      "mission": "Misión",
+      "founder": "Fundador",
+      "resources": "Recursos",
+      "github": "GitHub",
+      "documentation": "Documentación",
+      "support": "Soporte"
+    },
+    "legal": {
+      "title": "Legal",
+      "privacy": "Privacidad",
+      "terms": "Términos",
+      "cookies": "Cookies"
+    },
+    "copyright": "© {year} Arka CDN. Todos los derechos reservados.",
+    "madeWith": "Hecho con",
+    "by": "por"
+  },
   "auth": {
     "login": {
       "title": "Iniciar sesión",
@@ -87,6 +147,273 @@
     "common": {
       "backToHome": "Volver al inicio",
       "required": "*"
+    }
+  },
+  "playground": {
+    "hero": {
+      "badge": "Interactive Playground",
+      "title1": "Prueba Arka CDN",
+      "title2": "en tiempo real",
+      "description": "Sube archivos, explora transacciones blockchain y experimenta con el almacenamiento descentralizado más rápido del mundo.",
+      "features": {
+        "fast": "Rápido",
+        "fastDesc": "Subida instantánea",
+        "global": "Global",
+        "globalDesc": "Distribución CDN",
+        "secure": "Seguro",
+        "secureDesc": "Blockchain",
+        "free": "Gratis",
+        "freeDesc": "Sin costo"
+      }
+    },
+    "header": {
+      "backToHome": "Volver al inicio",
+      "title": "Arka CDN",
+      "subtitle": "Playground",
+      "tryItNow": "Try it now",
+      "explorer": "Explorer",
+      "docs": "Docs",
+      "authenticated": "Autenticado",
+      "logout": "Salir",
+      "login": "Iniciar sesión",
+      "register": "Registrarse"
+    },
+    "page": {
+      "badge": "Playground interactivo",
+      "title1": "Prueba Arka CDN",
+      "title2": "en tiempo real",
+      "description": "Sube archivos, explora transacciones blockchain y experimenta con el almacenamiento descentralizado más rápido del mundo. Todo sin costo.",
+      "loading": {
+        "title": "Cargando perfil de test...",
+        "message": "Autenticando y preparando el playground"
+      },
+      "error": {
+        "title": "Error al cargar el playground",
+        "retry": "Reintentar"
+      }
+    },
+    "tryItNow": {
+      "step": "Paso 1",
+      "title": "Prueba ahora",
+      "description": "Sube un archivo de hasta 50MB y observa cómo Arka CDN lo distribuye globalmente en segundos",
+      "uploadFile": "Subir archivo",
+      "file": "Archivo",
+      "textJson": "Texto/JSON",
+      "text": "Texto",
+      "uploading": "Subiendo archivo...",
+      "fileSelected": "Archivo seleccionado",
+      "dragDrop": "Arrastra y suelta un archivo aquí",
+      "or": "o",
+      "selectFile": "Seleccionar archivo",
+      "maxSize": "Tamaño máximo: 50MB",
+      "cancel": "Cancelar",
+      "authenticating": "Autenticando...",
+      "fileName": "Nombre del archivo",
+      "fileNamePlaceholder": "data.txt o config.json",
+      "content": "Contenido",
+      "isJson": "Es JSON",
+      "jsonPlaceholder": "{\"key\": \"value\"}",
+      "textPlaceholder": "Escribe tu texto aquí...",
+      "uploadText": "Subir texto",
+      "uploadingText": "Subiendo...",
+      "clear": "Limpiar",
+      "success": {
+        "title": "File uploaded successfully!",
+        "fileName": "Nombre del archivo",
+        "publicUrl": "URL pública",
+        "openInNewTab": "Abrir en nueva pestaña",
+        "originalSize": "Tamaño original",
+        "finalSize": "Tamaño final",
+        "compressed": "(comprimido)",
+        "chunks": "Chunks",
+        "status": "Estado",
+        "pending": "El archivo se está subiendo, el enlace estará disponible pronto",
+        "viewInExplorer": "Ver en explorador",
+        "uploadAnother": "Upload another"
+      },
+      "errors": {
+        "fileTooLarge": "El archivo es demasiado grande. Tamaño máximo: 50MB",
+        "uploadError": "Error al subir el archivo",
+        "textError": "Error al subir el texto",
+        "invalidJson": "El JSON no es válido",
+        "required": "Por favor, ingresa datos y un nombre de archivo",
+        "testCredentials": "Las credenciales de test no están configuradas. Por favor, configure las variables de entorno.",
+        "authError": "No se pudo autenticar. Por favor, intente más tarde."
+      }
+    },
+    "explorer": {
+      "step": "Paso 2",
+      "title": "Explora tus archivos",
+      "description": "Explora tus archivos subidos y observa cómo Arka CDN los distribuye globalmente en segundos",
+      "uploadedFiles": "Uploaded files",
+      "account": "Account:",
+      "noFiles": "Aún no hay archivos",
+      "noFilesDesc": "Sube algo arriba para empezar",
+      "clickToPreview": "Click to preview",
+      "transactions": "Transacciones",
+      "chunks": "chunks",
+      "chunk": "Chunk #",
+      "arkiv": "Arkiv",
+      "txHash": "TX Hash",
+      "size": "Tamaño",
+      "preview": {
+        "weight": "Peso:",
+        "format": "Formato:",
+        "close": "Cerrar",
+        "openInNewTab": "Abrir en una pestaña nueva",
+        "open": "Abrir",
+        "noPreview": "Previsualización no disponible para este tipo de archivo",
+        "videoNotSupported": "Tu navegador no soporta la reproducción de video."
+      }
+    },
+    "entityManager": {
+      "title": "Gestión de Entidades en Arkiv Network",
+      "notAuthenticated": "Debes estar autenticado",
+      "notAuthenticatedDesc": "Inicia sesión para gestionar entidades en Arkiv Network",
+      "query": {
+        "title": "Consultar Entidades",
+        "type": "Tipo",
+        "typePlaceholder": "file, file-chunk, etc.",
+        "fileName": "Nombre de archivo",
+        "fileNamePlaceholder": "image.jpg",
+        "limit": "Límite",
+        "withAttributes": "Con atributos",
+        "withPayload": "Con payload",
+        "button": "Consultar"
+      },
+      "results": {
+        "title": "Resultados",
+        "entityKey": "Entity Key",
+        "edit": "Editar",
+        "attributes": "Atributos",
+        "payload": "Payload"
+      },
+      "edit": {
+        "title": "Actualizar Entidad",
+        "entityKey": "Entity Key",
+        "titleField": "Título",
+        "content": "Contenido",
+        "description": "Descripción",
+        "expirationHours": "Horas de expiración (1-8760)",
+        "customData": "Custom Data (JSON)",
+        "customDataPlaceholder": "{\"key\": \"value\"}",
+        "cancel": "Cancelar",
+        "update": "Actualizar"
+      },
+      "errors": {
+        "notAuthenticated": "Debes estar autenticado para consultar entidades",
+        "queryError": "Error al consultar entidades",
+        "updateError": "Error al actualizar entidad",
+        "invalidJson": "El customData debe ser un JSON válido"
+      }
+    },
+    "personalFiles": {
+      "badge": "Personal",
+      "title": "Administra tus archivos",
+      "description": "Inicia sesión con tu cuenta personal para gestionar tus archivos",
+      "notLoggedIn": "No has iniciado sesión",
+      "notLoggedInDesc": "Para administrar tus archivos personales, necesitas iniciar sesión con tu cuenta.",
+      "login": "Iniciar sesión",
+      "user": "Usuario",
+      "showKeys": "Ver claves",
+      "hideKeys": "Ocultar",
+      "keys": "claves",
+      "accessKeys": "Claves de acceso",
+      "accessToken": "Access Token",
+      "refreshToken": "Refresh Token",
+      "notAvailable": "No disponible",
+      "logout": "Cerrar sesión",
+      "upload": {
+        "title": "Subir archivo personal",
+        "stats": "Estadísticas",
+        "uploadFile": "Subir archivo",
+        "textJson": "Texto/JSON",
+        "uploading": "Subiendo archivo...",
+        "fileSelected": "Archivo seleccionado",
+        "dragDrop": "Arrastra y suelta un archivo aquí",
+        "or": "o",
+        "selectFile": "Seleccionar archivo",
+        "maxSize": "Tamaño máximo: 50MB",
+        "cancel": "Cancelar",
+        "fileName": "Nombre del archivo",
+        "fileNamePlaceholder": "data.txt o config.json",
+        "content": "Contenido",
+        "isJson": "Es JSON",
+        "jsonPlaceholder": "{\"key\": \"value\"}",
+        "textPlaceholder": "Escribe tu texto aquí...",
+        "uploadText": "Subir texto",
+        "uploadingText": "Subiendo...",
+        "clear": "Limpiar",
+        "success": {
+          "title": "Archivo subido exitosamente",
+          "publicUrl": "URL pública",
+          "openInNewTab": "Abrir en nueva pestaña",
+          "viewInExplorer": "Ver en explorador",
+          "uploadAnother": "Subir otro archivo"
+        }
+      },
+      "myFiles": {
+        "title": "Mis archivos",
+        "refresh": "Actualizar",
+        "noFiles": "No hay archivos aún",
+        "noFilesDesc": "Sube tu primer archivo usando el formulario de arriba",
+        "size": "Tamaño",
+        "uploaded": "Subido",
+        "publicUrl": "URL pública",
+        "view": "Ver",
+        "delete": "Eliminar",
+        "deleteConfirm": "¿Estás seguro de que deseas eliminar este archivo?",
+        "viewAsText": "Ver como texto",
+        "viewAsJson": "Ver como JSON",
+        "viewUploadStatus": "Ver estado de subida"
+      },
+      "viewContent": {
+        "textTitle": "Contenido del archivo",
+        "jsonTitle": "JSON del archivo"
+      },
+      "uploadStatus": {
+        "title": "Estado de subida",
+        "status": "Estado",
+        "progress": "Progreso",
+        "totalChunks": "Chunks totales",
+        "uploadedChunks": "Chunks subidos",
+        "failedChunks": "Chunks fallidos",
+        "retries": "Reintentos",
+        "chunkDetails": "Detalles de chunks",
+        "chunk": "Chunk #"
+      },
+      "poolStats": {
+        "title": "Estadísticas del Pool de Wallets",
+        "summary": "Resumen",
+        "totalWallets": "Total de Wallets",
+        "activeWallets": "Wallets Activas",
+        "pendingChunks": "Chunks Pendientes",
+        "queueDetails": "Detalle de Colas",
+        "queue": "Cola #",
+        "processing": "Procesando",
+        "inactive": "Inactiva",
+        "pending": "Chunks Pendientes",
+        "successful": "Exitosos",
+        "failed": "Fallidos",
+        "successRate": "Tasa de Éxito",
+        "totalStats": "Estadísticas Totales",
+        "totalSuccessful": "Total Exitosos",
+        "totalFailed": "Total Fallidos",
+        "globalSuccessRate": "Tasa de Éxito Global"
+      },
+      "errors": {
+        "fileTooLarge": "El archivo es demasiado grande. Tamaño máximo: 50MB",
+        "uploadError": "Error al subir el archivo",
+        "textError": "Error al subir el texto",
+        "invalidJson": "El JSON no es válido",
+        "required": "Por favor, ingresa datos y un nombre de archivo",
+        "loadError": "Error al cargar archivos",
+        "deleteError": "Error al eliminar el archivo",
+        "contentError": "Error al cargar el contenido",
+        "statusError": "Error al cargar el estado",
+        "statsError": "Error al cargar estadísticas",
+        "statsFormatError": "La respuesta de estadísticas no tiene el formato esperado"
+      }
     }
   }
 }

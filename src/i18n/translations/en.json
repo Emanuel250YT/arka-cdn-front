@@ -35,6 +35,66 @@
       "description": "Data stored immutably on Arkiv Network with complete cryptographic verification."
     }
   },
+  "mission": {
+    "title": "Our Mission",
+    "description": "Democratizing decentralized storage by making blockchain technology accessible to everyone. We believe in a future where data is truly owned by its users, without intermediaries or single points of failure.",
+    "values": {
+      "decentralization": {
+        "title": "Decentralization",
+        "description": "We build on blockchain to ensure your data is truly yours."
+      },
+      "accessibility": {
+        "title": "Accessibility",
+        "description": "We make advanced technology simple and easy to use for everyone."
+      },
+      "innovation": {
+        "title": "Innovation",
+        "description": "Pioneers in combining blockchain with CDN for the best possible performance."
+      }
+    }
+  },
+  "founder": {
+    "title": "Meet the Founder",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+  },
+  "founder1": {
+    "name": "Emanuel Guzmán",
+    "description": "Tech visionary driving innovation at the intersection of sports and technology.",
+    "role": "Co-Founder - CMO",
+    "image": "/arkacdn.png"
+  },
+  "founder2": {
+    "name": "Mariano Velarde",
+    "description": "Marketing guru with a knack for building strong community connections",
+    "role": "Co-Founder - CMO",
+    "image": "/arkacdn.png"
+  },
+  "footer": {
+    "description": "Fast and reliable decentralized storage powered by Arkiv blockchain technology.",
+    "links": {
+      "product": "Product",
+      "features": "Features",
+      "playground": "Playground",
+      "apiDocs": "API Docs",
+      "company": "Company",
+      "about": "About",
+      "mission": "Mission",
+      "founder": "Founder",
+      "resources": "Resources",
+      "github": "GitHub",
+      "documentation": "Documentation",
+      "support": "Support"
+    },
+    "legal": {
+      "title": "Legal",
+      "privacy": "Privacy",
+      "terms": "Terms",
+      "cookies": "Cookies"
+    },
+    "copyright": "© {year} Arka CDN. All rights reserved.",
+    "madeWith": "Made with",
+    "by": "by"
+  },
   "auth": {
     "login": {
       "title": "Log in",
@@ -88,6 +148,272 @@
       "backToHome": "Back to home",
       "required": "*"
     }
+  },
+  "playground": {
+    "hero": {
+      "badge": "Interactive Playground",
+      "title1": "Try Arka CDN",
+      "title2": "in real time",
+      "description": "Upload files, explore blockchain transactions and experience the world's fastest decentralized storage.",
+      "features": {
+        "fast": "Fast",
+        "fastDesc": "Instant upload",
+        "global": "Global",
+        "globalDesc": "CDN distribution",
+        "secure": "Secure",
+        "secureDesc": "Blockchain",
+        "free": "Free",
+        "freeDesc": "No cost"
+      }
+    },
+    "header": {
+      "backToHome": "Back to home",
+      "title": "Arka CDN",
+      "subtitle": "Playground",
+      "tryItNow": "Try it now",
+      "explorer": "Explorer",
+      "docs": "Docs",
+      "authenticated": "Authenticated",
+      "logout": "Log out",
+      "login": "Log in",
+      "register": "Sign up"
+    },
+    "page": {
+      "badge": "Interactive playground",
+      "title1": "Try Arka CDN",
+      "title2": "in real time",
+      "description": "Upload files, explore blockchain transactions and experience the world's fastest decentralized storage. All free.",
+      "loading": {
+        "title": "Loading test profile...",
+        "message": "Authenticating and preparing the playground"
+      },
+      "error": {
+        "title": "Error loading playground",
+        "retry": "Retry"
+      }
+    },
+    "tryItNow": {
+      "step": "Step 1",
+      "title": "Try it now",
+      "description": "Upload a file up to 50MB and watch how Arka CDN distributes it globally in seconds",
+      "uploadFile": "Upload file",
+      "file": "File",
+      "textJson": "Text/JSON",
+      "text": "Text",
+      "uploading": "Uploading file...",
+      "fileSelected": "File selected",
+      "dragDrop": "Drag and drop a file here",
+      "or": "or",
+      "selectFile": "Select file",
+      "maxSize": "Maximum size: 50MB",
+      "cancel": "Cancel",
+      "authenticating": "Authenticating...",
+      "fileName": "File name",
+      "fileNamePlaceholder": "data.txt or config.json",
+      "content": "Content",
+      "isJson": "Is JSON",
+      "jsonPlaceholder": "{\"key\": \"value\"}",
+      "textPlaceholder": "Write your text here...",
+      "uploadText": "Upload text",
+      "uploadingText": "Uploading...",
+      "clear": "Clear",
+      "success": {
+        "title": "File uploaded successfully!",
+        "fileName": "File name",
+        "publicUrl": "Public URL",
+        "openInNewTab": "Open in new tab",
+        "originalSize": "Original size",
+        "finalSize": "Final size",
+        "compressed": "(compressed)",
+        "chunks": "Chunks",
+        "status": "Status",
+        "pending": "The file is being uploaded, the link will be available soon",
+        "viewInExplorer": "View in explorer",
+        "uploadAnother": "Upload another"
+      },
+      "errors": {
+        "fileTooLarge": "File is too large. Maximum size: 50MB",
+        "uploadError": "Error uploading file",
+        "textError": "Error uploading text",
+        "invalidJson": "JSON is not valid",
+        "required": "Please enter data and a file name",
+        "testCredentials": "Test credentials are not configured. Please configure the environment variables.",
+        "authError": "Could not authenticate. Please try again later."
+      }
+    },
+    "explorer": {
+      "step": "Step 2",
+      "title": "Explore your files",
+      "description": "Explore your uploaded files and see how Arka CDN distributes them globally in seconds",
+      "uploadedFiles": "Uploaded files",
+      "account": "Account:",
+      "noFiles": "No files yet",
+      "noFilesDesc": "Upload something above to get started",
+      "clickToPreview": "Click to preview",
+      "transactions": "Transactions",
+      "chunks": "chunks",
+      "chunk": "Chunk #",
+      "arkiv": "Arkiv",
+      "txHash": "TX Hash",
+      "size": "Size",
+      "preview": {
+        "weight": "Weight:",
+        "format": "Format:",
+        "close": "Close",
+        "openInNewTab": "Open in a new tab",
+        "open": "Open",
+        "noPreview": "Preview not available for this file type",
+        "videoNotSupported": "Your browser does not support video playback."
+      }
+    },
+    "entityManager": {
+      "title": "Entity Management in Arkiv Network",
+      "notAuthenticated": "You must be authenticated",
+      "notAuthenticatedDesc": "Log in to manage entities in Arkiv Network",
+      "query": {
+        "title": "Query Entities",
+        "type": "Type",
+        "typePlaceholder": "file, file-chunk, etc.",
+        "fileName": "File name",
+        "fileNamePlaceholder": "image.jpg",
+        "limit": "Limit",
+        "withAttributes": "With attributes",
+        "withPayload": "With payload",
+        "button": "Query"
+      },
+      "results": {
+        "title": "Results",
+        "entityKey": "Entity Key",
+        "edit": "Edit",
+        "attributes": "Attributes",
+        "payload": "Payload"
+      },
+      "edit": {
+        "title": "Update Entity",
+        "entityKey": "Entity Key",
+        "titleField": "Title",
+        "content": "Content",
+        "description": "Description",
+        "expirationHours": "Expiration hours (1-8760)",
+        "customData": "Custom Data (JSON)",
+        "customDataPlaceholder": "{\"key\": \"value\"}",
+        "cancel": "Cancel",
+        "update": "Update"
+      },
+      "errors": {
+        "notAuthenticated": "You must be authenticated to query entities",
+        "queryError": "Error querying entities",
+        "updateError": "Error updating entity",
+        "invalidJson": "customData must be valid JSON"
+      }
+    },
+    "personalFiles": {
+      "badge": "Personal",
+      "title": "Manage your files",
+      "description": "Log in with your personal account to manage your files",
+      "notLoggedIn": "You are not logged in",
+      "notLoggedInDesc": "To manage your personal files, you need to log in with your account.",
+      "login": "Log in",
+      "user": "User",
+      "showKeys": "Show keys",
+      "hideKeys": "Hide",
+      "keys": "keys",
+      "accessKeys": "Access keys",
+      "accessToken": "Access Token",
+      "refreshToken": "Refresh Token",
+      "notAvailable": "Not available",
+      "logout": "Log out",
+      "upload": {
+        "title": "Upload personal file",
+        "stats": "Statistics",
+        "uploadFile": "Upload file",
+        "textJson": "Text/JSON",
+        "uploading": "Uploading file...",
+        "fileSelected": "File selected",
+        "dragDrop": "Drag and drop a file here",
+        "or": "or",
+        "selectFile": "Select file",
+        "maxSize": "Maximum size: 50MB",
+        "cancel": "Cancel",
+        "fileName": "File name",
+        "fileNamePlaceholder": "data.txt or config.json",
+        "content": "Content",
+        "isJson": "Is JSON",
+        "jsonPlaceholder": "{\"key\": \"value\"}",
+        "textPlaceholder": "Write your text here...",
+        "uploadText": "Upload text",
+        "uploadingText": "Uploading...",
+        "clear": "Clear",
+        "success": {
+          "title": "File uploaded successfully",
+          "publicUrl": "Public URL",
+          "openInNewTab": "Open in new tab",
+          "viewInExplorer": "View in explorer",
+          "uploadAnother": "Upload another file"
+        }
+      },
+      "myFiles": {
+        "title": "My files",
+        "refresh": "Refresh",
+        "noFiles": "No files yet",
+        "noFilesDesc": "Upload your first file using the form above",
+        "size": "Size",
+        "uploaded": "Uploaded",
+        "publicUrl": "Public URL",
+        "view": "View",
+        "delete": "Delete",
+        "deleteConfirm": "Are you sure you want to delete this file?",
+        "viewAsText": "View as text",
+        "viewAsJson": "View as JSON",
+        "viewUploadStatus": "View upload status"
+      },
+      "viewContent": {
+        "textTitle": "File content",
+        "jsonTitle": "File JSON"
+      },
+      "uploadStatus": {
+        "title": "Upload status",
+        "status": "Status",
+        "progress": "Progress",
+        "totalChunks": "Total chunks",
+        "uploadedChunks": "Uploaded chunks",
+        "failedChunks": "Failed chunks",
+        "retries": "Retries",
+        "chunkDetails": "Chunk details",
+        "chunk": "Chunk #"
+      },
+      "poolStats": {
+        "title": "Wallet Pool Statistics",
+        "summary": "Summary",
+        "totalWallets": "Total Wallets",
+        "activeWallets": "Active Wallets",
+        "pendingChunks": "Pending Chunks",
+        "queueDetails": "Queue Details",
+        "queue": "Queue #",
+        "processing": "Processing",
+        "inactive": "Inactive",
+        "pending": "Pending Chunks",
+        "successful": "Successful",
+        "failed": "Failed",
+        "successRate": "Success Rate",
+        "totalStats": "Total Statistics",
+        "totalSuccessful": "Total Successful",
+        "totalFailed": "Total Failed",
+        "globalSuccessRate": "Global Success Rate"
+      },
+      "errors": {
+        "fileTooLarge": "File is too large. Maximum size: 50MB",
+        "uploadError": "Error uploading file",
+        "textError": "Error uploading text",
+        "invalidJson": "JSON is not valid",
+        "required": "Please enter data and a file name",
+        "loadError": "Error loading files",
+        "deleteError": "Error deleting file",
+        "contentError": "Error loading content",
+        "statusError": "Error loading status",
+        "statsError": "Error loading statistics",
+        "statsFormatError": "Statistics response does not have the expected format"
+      }
+    }
   }
 }
-
