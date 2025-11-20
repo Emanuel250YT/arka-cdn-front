@@ -5,10 +5,12 @@ import { Header } from "@/components/landing/Header";
 import { PersonalFilesManager } from "@/components/playground/PersonalFilesManager";
 // import { EntityManager } from "@/components/playground/EntityManager";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
+import { useI18n } from "@/i18n/I18nProvider";
 // import { useState } from "react";
 // import { ArkaCDNClient } from "@/lib/arka-cdn-client";
 
 export default function DashboardPage() {
+  const { t } = useI18n();
   // const [client] = useState(() => new ArkaCDNClient(undefined, "user"));
 
   return (
@@ -40,7 +42,7 @@ export default function DashboardPage() {
             <div className="max-w-4xl mx-auto text-center space-y-6 mb-12">
               <div className="flex items-center justify-center gap-2">
                 <span className="text-purple-500">[</span>
-                <p className="text-gray-200 font-medium">Panel de control</p>
+                <p className="text-gray-200 font-medium">{t('dashboard.badge')}</p>
                 <span className="text-purple-500">]</span>
               </div>
 
@@ -48,15 +50,14 @@ export default function DashboardPage() {
                 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-semibold text-white"
                 style={{ lineHeight: "1.1" }}
               >
-                Gestiona tus{" "}
+                {t('dashboard.title1')}{" "}
                 <span className="bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent">
-                  archivos
+                  {t('dashboard.title2')}
                 </span>
               </h1>
 
               <p className="text-lg text-slate-400 max-w-2xl mx-auto">
-                Administra, visualiza y comparte tus archivos de forma segura
-                con Arka CDN
+                {t('dashboard.description')}
               </p>
             </div>
           </section>
