@@ -30,6 +30,30 @@ const PreviewModal = ({
   onClose: () => void;
 }) => {
   const { t } = useI18n();
+  const [textContent, setTextContent] = useState<string>("");
+  const [isLoadingText, setIsLoadingText] = useState(false);
+
+  useEffect(() => {
+    if (!isOpen || !file) return;
+
+    const fileUrl = assembleFileUrl(file.id);
+    const isText = file.mimeType.includes("json") || file.mimeType.includes("text");
+
+    if (isText) {
+      setIsLoadingText(true);
+      fetch(fileUrl)
+        .then((res) => res.text())
+        .then((text) => {
+          setTextContent(text);
+          setIsLoadingText(false);
+        })
+        .catch(() => {
+          setTextContent("Error loading content");
+          setIsLoadingText(false);
+        });
+    }
+  }, [isOpen, file]);
+
   if (!isOpen || !file) return null;
 
   const formatFileSize = (bytes: number): string => {
@@ -97,11 +121,17 @@ const PreviewModal = ({
                 {t('playground.explorer.preview.videoNotSupported')}
               </video>
             ) : isText ? (
-              <iframe
-                src={fileUrl}
-                className="shadow-xl w-full h-[50vh] sm:h-[60vh] border border-purple-700/30 rounded-lg bg-white"
-                title={file.originalName}
-              />
+              <div className="shadow-xl w-full h-[50vh] sm:h-[60vh] border border-purple-700/30 rounded-lg bg-slate-950 overflow-auto">
+                {isLoadingText ? (
+                  <div className="flex items-center justify-center h-full">
+                    <Loader2 className="w-6 h-6 text-purple-400 animate-spin" />
+                  </div>
+                ) : (
+                  <pre className="p-4 text-sm text-slate-300 font-mono whitespace-pre-wrap break-words">
+                    {textContent}
+                  </pre>
+                )}
+              </div>
             ) : (
               <div className="shadow-xl text-center py-8 sm:py-12">
                 <File className="w-12 h-12 sm:w-16 sm:h-16 text-purple-400/50 mx-auto mb-3 sm:mb-4" />
