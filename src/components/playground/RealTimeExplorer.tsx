@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { useFiles, useFile } from "@/hooks/useFiles";
 import { RequestResponseViewer } from "@/components/common/RequestResponseViewer";
+import { useI18n } from "@/i18n/I18nProvider";
 
 const PreviewModal = ({
   file,
@@ -28,6 +29,7 @@ const PreviewModal = ({
   isOpen: boolean;
   onClose: () => void;
 }) => {
+  const { t } = useI18n();
   if (!isOpen || !file) return null;
 
   const formatFileSize = (bytes: number): string => {
@@ -57,21 +59,21 @@ const PreviewModal = ({
         className="bg-purple-950/50 border border-purple-600/50 rounded-2xl shadow-2xl w-full max-w-4xl mx-2 sm:mx-4 max-h-[90vh] overflow-hidden flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between p-4 sm:p-6 border-b border-purple-700/30">
+            <div className="flex items-center justify-between p-4 sm:p-6 border-b border-purple-700/30">
           <div className="flex-1 min-w-0 pr-2">
             <h2 className="text-base sm:text-xl font-semibold text-white truncate">
               {file.originalName}
             </h2>
             <div className="flex flex-wrap items-center gap-2 sm:gap-3 mt-2 text-xs sm:text-sm text-purple-300/70">
-              <span>Peso: {formatFileSize(file.size)}</span>
+              <span>{t('playground.explorer.preview.weight')} {formatFileSize(file.size)}</span>
               <span className="hidden sm:inline">•</span>
-              <span className="break-all">Formato: {file.mimeType}</span>
+              <span className="break-all">{t('playground.explorer.preview.format')} {file.mimeType}</span>
             </div>
           </div>
           <button
             onClick={onClose}
             className="text-purple-400/60 hover:text-purple-300 transition-colors p-1.5 sm:p-2 flex-shrink-0"
-            title="Cerrar"
+            title={t('playground.explorer.preview.close')}
           >
             <X className="w-5 h-5 sm:w-6 sm:h-6" />
           </button>
@@ -92,7 +94,7 @@ const PreviewModal = ({
                 controls
                 className="shadow-xl max-w-full max-h-[50vh] sm:max-h-[60vh] rounded-lg"
               >
-                Tu navegador no soporta la reproducción de video.
+                {t('playground.explorer.preview.videoNotSupported')}
               </video>
             ) : isText ? (
               <iframe
@@ -104,7 +106,7 @@ const PreviewModal = ({
               <div className="shadow-xl text-center py-8 sm:py-12">
                 <File className="w-12 h-12 sm:w-16 sm:h-16 text-purple-400/50 mx-auto mb-3 sm:mb-4" />
                 <p className="text-purple-300/70 text-sm sm:text-base px-4">
-                  Previsualización no disponible para este tipo de archivo
+                  {t('playground.explorer.preview.noPreview')}
                 </p>
                 <p className="text-purple-400/50 text-xs sm:text-sm mt-2">
                   {file.mimeType}
@@ -119,15 +121,15 @@ const PreviewModal = ({
             onClick={onClose}
             className="cursor-pointer px-4 sm:px-6 py-2 sm:py-2.5 text-purple-300 bg-purple-800/50 border border-purple-700/50 rounded-lg text-sm sm:text-base font-medium hover:bg-purple-800/70 hover:border-purple-600/70 transition-colors"
           >
-            Cerrar
+            {t('playground.explorer.preview.close')}
           </button>
           <button
             onClick={handleOpenInNewTab}
             className="cursor-pointer px-4 sm:px-6 py-2 sm:py-2.5 bg-purple-600 text-white rounded-lg text-sm sm:text-base font-medium hover:bg-purple-700 transition-colors flex items-center justify-center gap-2"
           >
             <ExternalLink className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-            <span className="hidden sm:inline">Abrir en una pestaña nueva</span>
-            <span className="sm:hidden">Abrir</span>
+            <span className="hidden sm:inline">{t('playground.explorer.preview.openInNewTab')}</span>
+            <span className="sm:hidden">{t('playground.explorer.preview.open')}</span>
           </button>
         </div>
       </div>
@@ -150,6 +152,7 @@ const FileCard = ({
   onToggleDetails: () => void;
   onPreview: () => void;
 }) => {
+  const { t } = useI18n();
   const { file: fileDetails, isLoading: isLoadingDetails } = useFile(
     client,
     isExpanded ? file.id : null,
@@ -224,7 +227,7 @@ const FileCard = ({
               onClick={onPreview}
               className="cursor-pointer text-xs text-purple-400 hover:text-purple-300 mt-1.5 inline-block transition-colors"
             >
-              Click to preview
+              {t('playground.explorer.clickToPreview')}
             </button>
           </div>
         </div>
@@ -268,7 +271,7 @@ const FileCard = ({
           ) : fileDetails?.chunks ? (
             <>
               <p className="text-xs sm:text-sm text-purple-300/70 font-medium mb-2">
-                Transacciones ({fileDetails.chunks.length} chunks)
+                {t('playground.explorer.transactions')} ({fileDetails.chunks.length} {t('playground.explorer.chunks')})
               </p>
               {fileDetails.chunks.map((chunk, idx) => {
                 const isChunkPending =
@@ -283,7 +286,7 @@ const FileCard = ({
                   >
                     <div className="flex justify-between items-center flex-wrap gap-2">
                       <span className="text-purple-300/70">
-                        Chunk #{chunk.chunkIndex}
+                        {t('playground.explorer.chunk')}{chunk.chunkIndex}
                       </span>
                       <span
                         className={`capitalize flex items-center gap-1 ${
@@ -301,21 +304,21 @@ const FileCard = ({
                       </span>
                     </div>
                     <div>
-                      <p className="text-purple-300/60 mb-0.5 text-xs">Arkiv</p>
+                      <p className="text-purple-300/60 mb-0.5 text-xs">{t('playground.explorer.arkiv')}</p>
                       <p className="text-purple-400/70 font-mono break-all leading-tight text-xs sm:text-sm">
                         {chunk.arkivAddress}
                       </p>
                     </div>
                     {chunk.txHash && (
                       <div>
-                        <p className="text-purple-300/60 mb-0.5 text-xs">TX Hash</p>
+                        <p className="text-purple-300/60 mb-0.5 text-xs">{t('playground.explorer.txHash')}</p>
                         <p className="text-purple-400/70 font-mono break-all leading-tight text-xs sm:text-sm">
                           {chunk.txHash}
                         </p>
                       </div>
                     )}
                     <div className="flex justify-between items-center pt-2 sm:pt-3 border-t border-purple-800/20">
-                      <span className="text-purple-300/60 text-xs">Tamaño</span>
+                      <span className="text-purple-300/60 text-xs">{t('playground.explorer.size')}</span>
                       <span className="text-white/80 text-xs sm:text-sm">
                         {formatFileSize(chunk.size)}
                       </span>
@@ -332,6 +335,7 @@ const FileCard = ({
 };
 
 export const RealTimeExplorer = () => {
+  const { t } = useI18n();
   const [latestRequestResponse, setLatestRequestResponse] = useState<RequestResponseData | null>(null);
   const [client] = useState(() => {
     const c = new ArkaCDNClient(undefined, "test", (data) => {
@@ -389,14 +393,13 @@ export const RealTimeExplorer = () => {
         <div className="max-w-7xl mx-auto bg-purple-900/10 p-6 sm:p-8 lg:p-12 rounded-2xl">
           <div className="text-center mb-8 sm:mb-12">
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-purple-900/30 border border-purple-700/40 rounded-full text-xs mb-4">
-              <span className="text-purple-400">Paso 2</span>
+              <span className="text-purple-400">{t('playground.explorer.step')}</span>
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-white mb-3 sm:mb-4 px-4">
-              Explora tus archivos
+              {t('playground.explorer.title')}
             </h2>
             <p className="text-base sm:text-lg text-slate-400 px-4">
-              Explora tus archivos subidos y observa cómo Arka CDN los
-              distribuye globalmente en segundos
+              {t('playground.explorer.description')}
             </p>
           </div>
 
@@ -404,10 +407,10 @@ export const RealTimeExplorer = () => {
             <div className="flex items-center justify-between mb-4 sm:mb-6">
               <div>
                 <h2 className="text-xl sm:text-2xl font-semibold text-white mb-1">
-                  Uploaded files
+                  {t('playground.explorer.uploadedFiles')}
                 </h2>
                 <p className="text-xs sm:text-sm text-purple-400/70 break-all">
-                  Account: {process.env.NEXT_PUBLIC_TEST_EMAIL || 'test@cloudycoding.com'}
+                  {t('playground.explorer.account')} {process.env.NEXT_PUBLIC_TEST_EMAIL || 'test@cloudycoding.com'}
                 </p>
               </div>
             </div>
@@ -428,31 +431,30 @@ export const RealTimeExplorer = () => {
     >
       <div className="max-w-7xl mx-auto bg-purple-900/10 p-6 sm:p-8 lg:p-12 rounded-2xl">
         <div className="text-center mb-8 sm:mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-purple-900/30 border border-purple-700/40 rounded-full text-xs mb-4">
-            <span className="text-purple-400">Paso 2</span>
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-purple-900/30 border border-purple-700/40 rounded-full text-xs mb-4">
+              <span className="text-purple-400">{t('playground.explorer.step')}</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-white mb-3 sm:mb-4 px-4">
+              {t('playground.explorer.title')}
+            </h2>
+            <p className="text-base sm:text-lg text-slate-400 px-4">
+              {t('playground.explorer.description')}
+            </p>
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-white mb-3 sm:mb-4 px-4">
-            Explora tus archivos
-          </h2>
-          <p className="text-base sm:text-lg text-slate-400 px-4">
-            Explora tus archivos subidos y observa cómo Arka CDN los distribuye
-            globalmente en segundos
-          </p>
-        </div>
         <div className="mb-6 sm:mb-8">
-          <div className="flex items-center justify-between mb-4 sm:mb-6 gap-3">
+            <div className="flex items-center justify-between mb-4 sm:mb-6 gap-3">
             <div className="min-w-0 flex-1">
               <h2 className="text-xl sm:text-2xl font-semibold text-white mb-1">
-                Uploaded files
+                {t('playground.explorer.uploadedFiles')}
               </h2>
               <p className="text-xs sm:text-sm text-purple-400/70 break-all">
-                Account: test@cloudycoding.com
+                {t('playground.explorer.account')} test@cloudycoding.com
               </p>
             </div>
             <button
               onClick={() => window.location.reload()}
               className="text-purple-400/60 hover:text-purple-300 transition-colors p-2 rounded-lg hover:bg-purple-900/20 flex-shrink-0"
-              title="Actualizar"
+              title={t('playground.personalFiles.myFiles.refresh')}
             >
               <RefreshCw className="cursor-pointer w-4 h-4 sm:w-5 sm:h-5" />
             </button>
@@ -464,7 +466,7 @@ export const RealTimeExplorer = () => {
             <p className="text-red-300 text-xs sm:text-sm">
               {error instanceof Error
                 ? error.message
-                : "Error al cargar archivos"}
+                : t('playground.personalFiles.errors.loadError')}
             </p>
           </div>
         )}
@@ -472,9 +474,9 @@ export const RealTimeExplorer = () => {
         {files.length === 0 ? (
           <div className="border border-purple-700/20 rounded-lg p-8 sm:p-12 text-center bg-purple-900/5">
             <File className="w-10 h-10 sm:w-12 sm:h-12 text-purple-400/50 mx-auto mb-3" />
-            <p className="text-purple-300/70 text-sm">Aún no hay archivos</p>
+            <p className="text-purple-300/70 text-sm">{t('playground.explorer.noFiles')}</p>
             <p className="text-purple-400/50 text-xs mt-1">
-              Sube algo arriba para empezar
+              {t('playground.explorer.noFilesDesc')}
             </p>
           </div>
         ) : (

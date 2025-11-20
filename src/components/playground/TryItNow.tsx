@@ -6,12 +6,14 @@ import { assembleFileUrl } from '@/utils/url';
 import { Upload, CheckCircle2, ExternalLink, UploadCloud, X, Loader2, FileText, File } from 'lucide-react';
 import Link from 'next/link';
 import { RequestResponseViewer } from '@/components/common/RequestResponseViewer';
+import { useI18n } from '@/i18n/I18nProvider';
 
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
 
 type UploadMode = 'file' | 'text';
 
 export const TryItNow = () => {
+  const { t } = useI18n();
   const [latestRequestResponse, setLatestRequestResponse] = useState<RequestResponseData | null>(null);
   const [client] = useState(() => {
     const c = new ArkaCDNClient(undefined, 'test', (data) => {
@@ -40,18 +42,18 @@ export const TryItNow = () => {
       const username = process.env.NEXT_PUBLIC_TEST_USERNAME;
 
       if (!email || !password || !username) {
-        throw new Error('Las credenciales de test no están configuradas. Por favor, configure las variables de entorno.');
+        throw new Error(t('playground.tryItNow.errors.testCredentials'));
       }
 
       try {
         await client.login(email, password);
       } catch {
-        try {
-          await client.register(email, password, username);
-          await client.login(email, password);
-        } catch {
-          throw new Error('No se pudo autenticar. Por favor, intente más tarde.');
-        }
+          try {
+            await client.register(email, password, username);
+            await client.login(email, password);
+          } catch {
+            throw new Error(t('playground.tryItNow.errors.authError'));
+          }
       }
       return true;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -68,7 +70,7 @@ export const TryItNow = () => {
     if (!file) return;
 
     if (file.size > MAX_FILE_SIZE) {
-      setError(`El archivo es demasiado grande. Tamaño máximo: 50MB`);
+      setError(t('playground.tryItNow.errors.fileTooLarge'));
       return;
     }
 
@@ -108,7 +110,7 @@ export const TryItNow = () => {
       }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      setError(err.message || 'Error al subir el archivo');
+      setError(err.message || t('playground.tryItNow.errors.uploadError'));
     } finally {
       setIsUploading(false);
       setUploadProgress(0);
@@ -117,7 +119,7 @@ export const TryItNow = () => {
 
   const handleUploadPlainText = async () => {
     if (!plainTextData.trim() || !plainTextFilename.trim()) {
-      setError('Por favor, ingresa datos y un nombre de archivo');
+      setError(t('playground.tryItNow.errors.required'));
       return;
     }
 
@@ -134,7 +136,7 @@ export const TryItNow = () => {
         try {
           dataToUpload = JSON.parse(plainTextData);
         } catch {
-          throw new Error('El JSON no es válido');
+          throw new Error(t('playground.tryItNow.errors.invalidJson'));
         }
       }
 
@@ -150,7 +152,7 @@ export const TryItNow = () => {
       setIsPlainTextJson(false);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      setError(err.message || 'Error al subir el texto');
+      setError(err.message || t('playground.tryItNow.errors.textError'));
     } finally {
       setIsUploading(false);
       setUploadProgress(0);
@@ -183,13 +185,13 @@ export const TryItNow = () => {
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8 sm:mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-purple-900/30 border border-purple-700/40 rounded-full text-xs mb-4">
-            <span className="text-purple-400">Paso 1</span>
+            <span className="text-purple-400">{t('playground.tryItNow.step')}</span>
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-white mb-3 sm:mb-4 px-4">
-            Prueba ahora
+            {t('playground.tryItNow.title')}
           </h2>
           <p className="text-base sm:text-lg text-slate-400 px-4">
-            Sube un archivo de hasta 50MB y observa cómo Arka CDN lo distribuye globalmente en segundos
+            {t('playground.tryItNow.description')}
           </p>
         </div>
 
@@ -209,8 +211,8 @@ export const TryItNow = () => {
             >
               <div className="flex items-center gap-1.5 sm:gap-2">
                 <File className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                <span className="hidden sm:inline">Subir archivo</span>
-                <span className="sm:hidden">Archivo</span>
+                <span className="hidden sm:inline">{t('playground.tryItNow.uploadFile')}</span>
+                <span className="sm:hidden">{t('playground.tryItNow.file')}</span>
               </div>
             </button>
             <button
@@ -227,8 +229,8 @@ export const TryItNow = () => {
             >
               <div className="flex items-center gap-1.5 sm:gap-2">
                 <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                <span className="hidden sm:inline">Texto/JSON</span>
-                <span className="sm:hidden">Texto</span>
+                <span className="hidden sm:inline">{t('playground.tryItNow.textJson')}</span>
+                <span className="sm:hidden">{t('playground.tryItNow.text')}</span>
               </div>
             </button>
           </div>
@@ -257,7 +259,7 @@ export const TryItNow = () => {
                     setError(null);
                     setUploadResult(null);
                   } else if (file) {
-                    setError(`El archivo es demasiado grande. Tamaño máximo: 50MB`);
+                    setError(t('playground.tryItNow.errors.fileTooLarge'));
                   }
                 }}
               >
@@ -267,7 +269,7 @@ export const TryItNow = () => {
                       <div className="animate-spin rounded-full h-12 w-12 sm:h-16 sm:w-16 border-t-2 border-b-2 border-purple-400"></div>
                     </div>
                     <div className="space-y-2">
-                      <p className="text-white font-medium text-sm sm:text-base">Subiendo archivo...</p>
+                      <p className="text-white font-medium text-sm sm:text-base">{t('playground.tryItNow.uploading')}</p>
                       <div className="w-full bg-purple-900/30 rounded-full h-2.5 sm:h-3 overflow-hidden">
                         <div
                           className="bg-gradient-to-r from-purple-500 to-purple-600 h-full transition-all duration-300"
@@ -281,7 +283,7 @@ export const TryItNow = () => {
                   <div className="space-y-4">
                     <div className="flex items-center justify-center gap-2 sm:gap-3 text-green-400">
                       <CheckCircle2 className="w-6 h-6 sm:w-8 sm:h-8" />
-                      <span className="text-base sm:text-lg font-medium">Archivo seleccionado</span>
+                      <span className="text-base sm:text-lg font-medium">{t('playground.tryItNow.fileSelected')}</span>
                     </div>
                     <div className="bg-purple-900/20 rounded-lg p-3 sm:p-4 text-left">
                       <p className="text-white font-medium text-sm sm:text-base break-all">{selectedFile.name}</p>
@@ -296,7 +298,7 @@ export const TryItNow = () => {
                         className="cursor-pointer px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-purple-700 to-purple-600 text-white rounded-xl text-sm sm:text-base font-medium hover:from-purple-600 hover:to-purple-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg shadow-purple-700/30"
                       >
                         <UploadCloud className="w-4 h-4 sm:w-5 sm:h-5" />
-                        {isAuthenticating ? 'Autenticando...' : 'Subir archivo'}
+                        {isAuthenticating ? t('playground.tryItNow.authenticating') : t('playground.tryItNow.uploadFile')}
                       </button>
                       <button
                         onClick={() => {
@@ -305,7 +307,7 @@ export const TryItNow = () => {
                         }}
                         className="cursor-pointer px-4 sm:px-6 py-2.5 sm:py-3 bg-gray-700/50 text-white rounded-xl text-sm sm:text-base font-medium hover:bg-gray-700 transition-all"
                       >
-                        Cancelar
+                        {t('playground.tryItNow.cancel')}
                       </button>
                     </div>
                   </div>
@@ -316,9 +318,9 @@ export const TryItNow = () => {
                     </div>
                     <div>
                       <p className="text-white text-base sm:text-lg font-medium mb-2">
-                        Arrastra y suelta un archivo aquí
+                        {t('playground.tryItNow.dragDrop')}
                       </p>
-                      <p className="text-slate-400 text-xs sm:text-sm mb-4">o</p>
+                      <p className="text-slate-400 text-xs sm:text-sm mb-4">{t('playground.tryItNow.or')}</p>
                       <label className="inline-block">
                         <input
                           ref={fileInputRef}
@@ -333,12 +335,12 @@ export const TryItNow = () => {
                           disabled={isUploading || isAuthenticating}
                         />
                         <span className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-purple-700 to-purple-600 text-white rounded-xl text-sm sm:text-base font-medium hover:from-purple-600 hover:to-purple-500 transition-all cursor-pointer inline-flex items-center gap-2 shadow-lg shadow-purple-700/30">
-                          Seleccionar archivo
+                          {t('playground.tryItNow.selectFile')}
                         </span>
                       </label>
                     </div>
                     <p className="text-xs text-purple-400 mt-4">
-                      Tamaño máximo: 50MB
+                      {t('playground.tryItNow.maxSize')}
                     </p>
                   </div>
                 )}
@@ -348,13 +350,13 @@ export const TryItNow = () => {
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm text-purple-300 mb-2">
-                      Nombre del archivo
+                      {t('playground.tryItNow.fileName')}
                     </label>
                     <input
                       type="text"
                       value={plainTextFilename}
                       onChange={(e) => setPlainTextFilename(e.target.value)}
-                      placeholder="data.txt o config.json"
+                      placeholder={t('playground.tryItNow.fileNamePlaceholder')}
                       className="w-full px-4 py-2 bg-purple-950/50 border border-purple-700/30 rounded-lg text-white placeholder-purple-400/50 focus:outline-none focus:border-purple-500"
                       disabled={isUploading || isAuthenticating}
                     />
@@ -362,7 +364,7 @@ export const TryItNow = () => {
                   <div>
                     <div className="flex items-center justify-between mb-2">
                       <label className="block text-sm text-purple-300">
-                        Contenido
+                        {t('playground.tryItNow.content')}
                       </label>
                       <label className="flex items-center gap-2 text-xs text-purple-400 cursor-pointer">
                         <input
@@ -372,13 +374,13 @@ export const TryItNow = () => {
                           className="rounded"
                           disabled={isUploading || isAuthenticating}
                         />
-                        Es JSON
+                        {t('playground.tryItNow.isJson')}
                       </label>
                     </div>
                     <textarea
                       value={plainTextData}
                       onChange={(e) => setPlainTextData(e.target.value)}
-                      placeholder={isPlainTextJson ? '{"key": "value"}' : 'Escribe tu texto aquí...'}
+                      placeholder={isPlainTextJson ? t('playground.tryItNow.jsonPlaceholder') : t('playground.tryItNow.textPlaceholder')}
                       rows={10}
                       className="w-full px-4 py-2 bg-purple-950/50 border border-purple-700/30 rounded-lg text-white placeholder-purple-400/50 focus:outline-none focus:border-purple-500 font-mono text-sm"
                       disabled={isUploading || isAuthenticating}
@@ -391,7 +393,7 @@ export const TryItNow = () => {
                       className="cursor-pointer px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-purple-700 to-purple-600 text-white rounded-xl text-sm sm:text-base font-medium hover:from-purple-600 hover:to-purple-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg shadow-purple-700/30"
                     >
                       <UploadCloud className="w-4 h-4 sm:w-5 sm:h-5" />
-                      {isUploading ? 'Subiendo...' : isAuthenticating ? 'Autenticando...' : 'Subir texto'}
+                      {isUploading ? t('playground.tryItNow.uploadingText') : isAuthenticating ? t('playground.tryItNow.authenticating') : t('playground.tryItNow.uploadText')}
                     </button>
                     <button
                       onClick={() => {
@@ -402,7 +404,7 @@ export const TryItNow = () => {
                       className="cursor-pointer px-4 sm:px-6 py-2.5 sm:py-3 bg-gray-700/50 text-white rounded-xl text-sm sm:text-base font-medium hover:bg-gray-700 transition-all"
                       disabled={isUploading || isAuthenticating}
                     >
-                      Limpiar
+                      {t('playground.tryItNow.clear')}
                     </button>
                   </div>
                 </div>
@@ -431,20 +433,20 @@ export const TryItNow = () => {
                   </div>
                 </div>
                 <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 px-4">
-                  File uploaded successfully!
+                  {t('playground.tryItNow.success.title')}
                 </h3>
               </div>
 
               <div className="bg-purple-900/20 rounded-xl p-4 sm:p-6 space-y-3 sm:space-y-4 border border-purple-700/30">
                 <div>
-                  <p className="text-xs sm:text-sm text-purple-300 mb-1">Nombre del archivo</p>
+                  <p className="text-xs sm:text-sm text-purple-300 mb-1">{t('playground.tryItNow.success.fileName')}</p>
                   <p className="text-white font-medium text-sm sm:text-base break-all">
                     {uploadedFileName || uploadResult.data.fileId}
                   </p>
                 </div>
 
                 <div>
-                  <p className="text-xs sm:text-sm text-purple-300 mb-1">URL pública</p>
+                  <p className="text-xs sm:text-sm text-purple-300 mb-1">{t('playground.tryItNow.success.publicUrl')}</p>
                   <div className="flex items-center gap-2 bg-purple-950/50 rounded-lg p-2 sm:p-3 border border-purple-800/30 group">
                     <p className="text-purple-400 text-xs sm:text-sm break-all flex-1 min-w-0">
                       {assembleFileUrl(uploadResult.data.fileId)}
@@ -454,7 +456,7 @@ export const TryItNow = () => {
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-purple-400 hover:text-purple-300 transition-all hover:scale-110 relative flex-shrink-0"
-                      title="Abrir en nueva pestaña"
+                      title={t('playground.tryItNow.success.openInNewTab')}
                     >
                       <ExternalLink className="w-4 h-4 sm:w-5 sm:h-5" />
                       <span className="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full animate-ping opacity-75"></span>
@@ -464,37 +466,37 @@ export const TryItNow = () => {
                   {uploadResult.data.status === 'pending' && (
                     <p className="text-xs text-yellow-400 mt-2 flex items-center gap-1">
                       <Loader2 className="w-3 h-3 animate-spin" />
-                      <span className="text-xs">El archivo se está subiendo, el enlace estará disponible pronto</span>
+                      <span className="text-xs">{t('playground.tryItNow.success.pending')}</span>
                     </p>
                   )}
                 </div>
 
                 <div className="grid grid-cols-2 gap-3 sm:gap-4 pt-4 border-t border-purple-700/30">
                   <div>
-                    <p className="text-xs text-purple-300 mb-1">Tamaño original</p>
+                    <p className="text-xs text-purple-300 mb-1">{t('playground.tryItNow.success.originalSize')}</p>
                     <p className="text-white font-medium text-sm sm:text-base">
                       {formatFileSize(uploadResult.data.originalSize)}
                     </p>
                   </div>
                   <div>
-                    <p className="text-xs text-purple-300 mb-1">Tamaño final</p>
+                    <p className="text-xs text-purple-300 mb-1">{t('playground.tryItNow.success.finalSize')}</p>
                     <p className="text-white font-medium text-sm sm:text-base">
                       {formatFileSize(uploadResult.data.totalSize)}
                       {uploadResult.data.compressed && (
                         <span className="text-green-400 text-xs ml-1 sm:ml-2">
-                          (comprimido)
+                          {t('playground.tryItNow.success.compressed')}
                         </span>
                       )}
                     </p>
                   </div>
                   <div>
-                    <p className="text-xs text-purple-300 mb-1">Chunks</p>
+                    <p className="text-xs text-purple-300 mb-1">{t('playground.tryItNow.success.chunks')}</p>
                     <p className="text-white font-medium text-sm sm:text-base">
                       {uploadResult.data.chunks}
                     </p>
                   </div>
                   <div>
-                    <p className="text-xs text-purple-300 mb-1">Estado</p>
+                    <p className="text-xs text-purple-300 mb-1">{t('playground.tryItNow.success.status')}</p>
                     <p className="text-white font-medium text-sm sm:text-base capitalize">
                       {uploadResult.data.status}
                     </p>
@@ -510,13 +512,13 @@ export const TryItNow = () => {
                   className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-purple-700 to-purple-600 text-white rounded-xl text-sm sm:text-base font-medium hover:from-purple-600 hover:to-purple-500 transition-all flex items-center justify-center gap-2 hover:scale-105 transform shadow-lg shadow-purple-700/30"
                 >
                   <ExternalLink className="w-4 h-4 sm:w-5 sm:h-5" />
-                  Ver en explorador
+                  {t('playground.tryItNow.success.viewInExplorer')}
                 </Link>
                 <button
                   onClick={handleUploadAnother}
                   className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gray-700/50 text-white rounded-xl text-sm sm:text-base font-medium hover:bg-gray-700 transition-all hover:scale-105 transform"
                 >
-                  Upload another
+                  {t('playground.tryItNow.success.uploadAnother')}
                 </button>
               </div>
 
