@@ -23,6 +23,7 @@ import {
   UploadCloud,
   RefreshCw,
 } from 'lucide-react';
+import Link from 'next/link';
 
 const MAX_FILE_SIZE = 50 * 1024 * 1024;
 
@@ -198,29 +199,29 @@ export const PersonalFilesManager = () => {
 
   if (!isAuthenticated) {
     return (
-      <section id="personal-files" className="py-16 lg:py-24 scroll-mt-20">
+      <section id="personal-files" className="py-14 pb-20 lg:py-20 lg:pb-28 scroll-mt-20">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-violet-900/30 border border-violet-700/40 rounded-full text-xs mb-4">
-              <span className="text-violet-400">Personal</span>
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-purple-900/30 border border-purple-700/40 rounded-full text-xs mb-4">
+              <span className="text-purple-400">Personal</span>
             </div>
-            <h2 className="text-4xl lg:text-5xl font-bold text-white mb-4">
+            <h2 className="text-4xl lg:text-5xl font-semibold text-white mb-4">
               Administra tus archivos
             </h2>
-            <p className="text-lg text-blue-200">
+            <p className="text-lg text-slate-400">
               Inicia sesión con tu cuenta personal para gestionar tus archivos
             </p>
           </div>
 
-          <div className="bg-gradient-to-br from-blue-900/20 to-violet-900/20 backdrop-blur-sm border border-blue-700/30 rounded-2xl p-8 lg:p-12 text-center">
-            <User className="w-16 h-16 text-blue-400 mx-auto mb-4 opacity-50" />
-            <p className="text-blue-300 text-lg mb-4">No has iniciado sesión</p>
-            <p className="text-blue-400 text-sm mb-6">
+          <div className="backdrop-blur-sm rounded-2xl border border-purple-700/30 bg-gradient-to-br from-purple-900/20 to-purple-800/10 p-8 lg:p-12 text-center shadow-2xl shadow-purple-900/20">
+            <User className="w-16 h-16 text-purple-400 mx-auto mb-4 opacity-50" />
+            <p className="text-purple-300 text-lg mb-4">No has iniciado sesión</p>
+            <p className="text-slate-400 text-sm mb-6">
               Para administrar tus archivos personales, necesitas iniciar sesión con tu cuenta.
             </p>
             <a
-              href="/auth/login?redirect=/playground"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl font-medium hover:from-blue-500 hover:to-blue-600 transition-all"
+              href="/login?redirect=/dashboard"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-700 to-purple-600 text-white rounded-xl font-medium hover:from-purple-600 hover:to-purple-500 transition-all shadow-lg shadow-purple-700/30 hover:shadow-purple-700/40"
             >
               <User className="w-5 h-5" />
               Iniciar sesión
@@ -232,42 +233,31 @@ export const PersonalFilesManager = () => {
   }
 
   return (
-    <section id="personal-files" className="py-16 lg:py-24 scroll-mt-20">
+    <section id="personal-files" className="pb-20 lg:pb-28 scroll-mt-20">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-violet-900/30 border border-violet-700/40 rounded-full text-xs mb-4">
-            <span className="text-violet-400">Personal</span>
-          </div>
-          <h2 className="text-4xl lg:text-5xl font-bold text-white mb-4">
-            Administra tus archivos
-          </h2>
-          <p className="text-lg text-blue-200">
-            Gestiona tus archivos personales y visualiza tus claves de acceso
-          </p>
-        </div>
 
-        <div className="bg-gradient-to-br from-blue-900/20 to-violet-900/20 backdrop-blur-sm border border-blue-700/30 rounded-2xl p-6 mb-8">
+        <div className="backdrop-blur-sm rounded-2xl border border-purple-700/30 bg-gradient-to-br from-purple-900/20 to-purple-800/10 p-6 mb-8 shadow-2xl shadow-purple-900/20">
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-blue-900/30 rounded-lg flex items-center justify-center">
-                <User className="w-6 h-6 text-blue-400" />
+              <div className="w-12 h-12 bg-purple-900/30 rounded-lg flex items-center justify-center border border-purple-700/30">
+                <User className="w-6 h-6 text-purple-400" />
               </div>
               <div>
                 <p className="text-white font-medium">{userProfile?.name || 'Usuario'}</p>
-                <p className="text-blue-300 text-sm">{userProfile?.email}</p>
+                <p className="text-purple-300 text-sm">{userProfile?.email}</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setShowTokens(!showTokens)}
-                className="px-4 py-2 bg-gray-700/50 text-white rounded-lg text-sm font-medium hover:bg-gray-700 transition-all flex items-center gap-2"
+                className="cursor-pointer px-4 py-2 bg-purple-900/30 text-white rounded-lg text-sm font-medium hover:bg-purple-900/50 transition-all flex items-center gap-2 border border-purple-700/30"
               >
                 {showTokens ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 {showTokens ? 'Ocultar' : 'Ver'} claves
               </button>
               <button
                 onClick={handleLogout}
-                className="px-4 py-2 bg-red-900/30 text-red-300 rounded-lg text-sm font-medium hover:bg-red-900/50 transition-all flex items-center gap-2 border border-red-700/50"
+                className="cursor-pointer px-4 py-2 bg-red-900/30 text-red-300 rounded-lg text-sm font-medium hover:bg-red-900/50 transition-all flex items-center gap-2 border border-red-700/50"
               >
                 <LogOut className="w-4 h-4" />
                 Cerrar sesión
@@ -276,24 +266,24 @@ export const PersonalFilesManager = () => {
           </div>
 
           {showTokens && (
-            <div className="mt-6 pt-6 border-t border-blue-700/30 space-y-4">
+            <div className="mt-6 pt-6 border-t border-purple-700/30 space-y-4 animate-fade-in">
               <div className="flex items-center gap-2 mb-3">
-                <Key className="w-5 h-5 text-blue-400" />
+                <Key className="w-5 h-5 text-purple-400" />
                 <p className="text-white font-medium">Claves de acceso</p>
               </div>
               <div className="space-y-3">
                 <div>
-                  <p className="text-xs text-blue-300 mb-2">Access Token</p>
-                  <div className="bg-blue-950/50 rounded-lg p-3">
-                    <p className="text-blue-400 text-xs break-all font-mono">
+                  <p className="text-xs text-purple-300 mb-2">Access Token</p>
+                  <div className="bg-purple-950/50 rounded-lg p-3 border border-purple-800/30">
+                    <p className="text-purple-400 text-xs break-all font-mono">
                       {tokens.accessToken || 'No disponible'}
                     </p>
                   </div>
                 </div>
                 <div>
-                  <p className="text-xs text-blue-300 mb-2">Refresh Token</p>
-                  <div className="bg-blue-950/50 rounded-lg p-3">
-                    <p className="text-blue-400 text-xs break-all font-mono">
+                  <p className="text-xs text-purple-300 mb-2">Refresh Token</p>
+                  <div className="bg-purple-950/50 rounded-lg p-3 border border-purple-800/30">
+                    <p className="text-purple-400 text-xs break-all font-mono">
                       {tokens.refreshToken || 'No disponible'}
                     </p>
                   </div>
@@ -303,21 +293,21 @@ export const PersonalFilesManager = () => {
           )}
         </div>
 
-        <div className="bg-gradient-to-br from-blue-900/20 to-violet-900/20 backdrop-blur-sm border border-blue-700/30 rounded-2xl p-8 mb-8">
-          <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-            <UploadCloud className="w-5 h-5" />
+        <div className="backdrop-blur-sm rounded-2xl border border-purple-700/30 bg-gradient-to-br from-purple-900/20 to-purple-800/10 p-8 lg:p-12 mb-8 shadow-2xl shadow-purple-900/20">
+          <h3 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">
+            <UploadCloud className="w-5 h-5 text-purple-400" />
             Subir archivo personal
           </h3>
 
           {!uploadResult ? (
             <>
               <div
-                className={`border-2 border-dashed rounded-xl p-8 text-center transition-all duration-300 ${
+                className={`border-2 border-dashed rounded-xl p-12 text-center transition-all duration-300 ${
                   isUploading
-                    ? 'border-blue-500 bg-blue-900/20 animate-pulse'
+                    ? 'border-purple-500 bg-purple-900/20 animate-pulse'
                     : selectedFile
                     ? 'border-green-500 bg-green-900/20'
-                    : 'border-blue-600/50 bg-blue-900/10 hover:border-blue-500 hover:bg-blue-900/20 cursor-pointer'
+                    : 'border-purple-600/50 bg-purple-900/10 hover:border-purple-500 hover:bg-purple-900/20 cursor-pointer'
                 }`}
                 onDragOver={(e) => {
                   e.preventDefault();
@@ -339,17 +329,17 @@ export const PersonalFilesManager = () => {
                 {isUploading ? (
                   <div className="space-y-4">
                     <div className="flex justify-center">
-                      <Loader2 className="w-8 h-8 text-blue-400 animate-spin" />
+                      <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-purple-400"></div>
                     </div>
                     <div className="space-y-2">
                       <p className="text-white font-medium">Subiendo archivo...</p>
-                      <div className="w-full bg-blue-900/30 rounded-full h-3 overflow-hidden">
+                      <div className="w-full bg-purple-900/30 rounded-full h-3 overflow-hidden">
                         <div
-                          className="bg-gradient-to-r from-blue-500 to-blue-600 h-full transition-all duration-300"
+                          className="bg-gradient-to-r from-purple-500 to-purple-600 h-full transition-all duration-300"
                           style={{ width: `${uploadProgress}%` }}
                         />
                       </div>
-                      <p className="text-sm text-blue-300">{Math.round(uploadProgress)}%</p>
+                      <p className="text-sm text-purple-300">{Math.round(uploadProgress)}%</p>
                     </div>
                   </div>
                 ) : selectedFile ? (
@@ -358,16 +348,16 @@ export const PersonalFilesManager = () => {
                       <CheckCircle2 className="w-8 h-8" />
                       <span className="text-lg font-medium">Archivo seleccionado</span>
                     </div>
-                    <div className="bg-blue-900/20 rounded-lg p-4 text-left">
+                    <div className="bg-purple-900/20 rounded-lg p-4 text-left border border-purple-700/30">
                       <p className="text-white font-medium">{selectedFile.name}</p>
-                      <p className="text-sm text-blue-300 mt-1">
+                      <p className="text-sm text-purple-300 mt-1">
                         {formatFileSize(selectedFile.size)}
                       </p>
                     </div>
                     <div className="flex gap-3 justify-center">
                       <button
                         onClick={handleUpload}
-                        className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl font-medium hover:from-blue-500 hover:to-blue-600 transition-all flex items-center gap-2"
+                        className="cursor-pointer px-6 py-3 bg-gradient-to-r from-purple-700 to-purple-600 text-white rounded-xl font-medium hover:from-purple-600 hover:to-purple-500 transition-all flex items-center gap-2 shadow-lg shadow-purple-700/30"
                       >
                         <UploadCloud className="w-5 h-5" />
                         Subir archivo
@@ -379,7 +369,7 @@ export const PersonalFilesManager = () => {
                             fileInputRef.current.value = '';
                           }
                         }}
-                        className="px-6 py-3 bg-gray-700/50 text-white rounded-xl font-medium hover:bg-gray-700 transition-all"
+                        className="cursor-pointer px-6 py-3 bg-gray-700/50 text-white rounded-xl font-medium hover:bg-gray-700 transition-all"
                       >
                         Cancelar
                       </button>
@@ -388,13 +378,13 @@ export const PersonalFilesManager = () => {
                 ) : (
                   <div className="space-y-4">
                     <div className="flex justify-center">
-                      <Upload className="w-16 h-16 text-blue-400" />
+                      <Upload className="w-16 h-16 text-purple-400" />
                     </div>
                     <div>
                       <p className="text-white text-lg font-medium mb-2">
                         Arrastra y suelta un archivo aquí
                       </p>
-                      <p className="text-blue-300 text-sm mb-4">o</p>
+                      <p className="text-slate-400 text-sm mb-4">o</p>
                       <label className="inline-block">
                         <input
                           ref={fileInputRef}
@@ -402,13 +392,18 @@ export const PersonalFilesManager = () => {
                           onChange={handleFileSelect}
                           className="hidden"
                           disabled={isUploading}
+                          accept="image/jpeg,image/jpg,image/png,image/gif,
+                            video/mp4,video/x-msvideo,video/quicktime,video/x-ms-wmv,video/webm,video/x-matroska,
+                            application/json,text/plain,application/xml,text/xml,application/pdf,application/zip,
+                            application/x-yaml,application/x-tar,application/gzip,application/javascript,text/javascript,
+                            application/typescript,text/x-typescript,text/css,text/html,text/markdown,text/csv"
                         />
-                        <span className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl font-medium hover:from-blue-500 hover:to-blue-600 transition-all cursor-pointer inline-flex items-center gap-2">
+                        <span className="px-6 py-3 bg-gradient-to-r from-purple-700 to-purple-600 text-white rounded-xl font-medium hover:from-purple-600 hover:to-purple-500 transition-all cursor-pointer inline-flex items-center gap-2 shadow-lg shadow-purple-700/30">
                           Seleccionar archivo
                         </span>
                       </label>
                     </div>
-                    <p className="text-xs text-blue-400 mt-4">
+                    <p className="text-xs text-purple-400 mt-4">
                       Tamaño máximo: 50MB
                     </p>
                   </div>
@@ -423,38 +418,50 @@ export const PersonalFilesManager = () => {
               )}
             </>
           ) : (
-            <div className="space-y-4 animate-fade-in">
+            <div className="space-y-6 animate-fade-in">
               <div className="text-center">
                 <div className="flex justify-center mb-4">
-                  <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center">
-                    <CheckCircle2 className="w-10 h-10 text-green-400" />
+                  <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center animate-pulse">
+                    <CheckCircle2 className="w-12 h-12 text-green-400" />
                   </div>
                 </div>
-                <h4 className="text-xl font-bold text-white mb-2">
+                <h3 className="text-2xl font-semibold text-white mb-2">
                   Archivo subido exitosamente
-                </h4>
+                </h3>
               </div>
 
-              <div className="bg-blue-900/20 rounded-xl p-6 space-y-4">
+              <div className="bg-purple-900/20 rounded-xl p-6 space-y-4 border border-purple-700/30">
                 <div>
-                  <p className="text-sm text-blue-300 mb-1">URL pública</p>
-                  <div className="flex items-center gap-2 bg-blue-950/50 rounded-lg p-3">
-                    <p className="text-blue-400 text-sm break-all flex-1">
+                  <p className="text-sm text-purple-300 mb-1">URL pública</p>
+                  <div className="flex items-center gap-2 bg-purple-950/50 rounded-lg p-3 border border-purple-800/30 group">
+                    <p className="text-purple-400 text-sm break-all flex-1">
                       {assembleFileUrl(uploadResult.data.fileId)}
                     </p>
                     <a
                       href={assembleFileUrl(uploadResult.data.fileId)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-blue-400 hover:text-blue-300 transition-colors"
+                      className="text-purple-400 hover:text-purple-300 transition-all hover:scale-110 relative"
+                      title="Abrir en nueva pestaña"
                     >
                       <ExternalLink className="w-5 h-5" />
+                      <span className="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full animate-ping opacity-75"></span>
+                      <span className="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full"></span>
                     </a>
                   </div>
                 </div>
               </div>
 
-              <div className="flex gap-3 justify-center">
+              <div className="flex gap-3 justify-center flex-wrap">
+                <Link
+                  href={assembleFileUrl(uploadResult.data.fileId)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-6 py-3 bg-gradient-to-r from-purple-700 to-purple-600 text-white rounded-xl font-medium hover:from-purple-600 hover:to-purple-500 transition-all flex items-center gap-2 hover:scale-105 transform shadow-lg shadow-purple-700/30"
+                >
+                  <ExternalLink className="w-5 h-5" />
+                  Ver en explorador
+                </Link>
                 <button
                   onClick={() => {
                     setUploadResult(null);
@@ -463,7 +470,7 @@ export const PersonalFilesManager = () => {
                       fileInputRef.current.value = '';
                     }
                   }}
-                  className="px-6 py-3 bg-gray-700/50 text-white rounded-xl font-medium hover:bg-gray-700 transition-all"
+                  className="cursor-pointer px-6 py-3 bg-gray-700/50 text-white rounded-xl font-medium hover:bg-gray-700 transition-all hover:scale-105 transform"
                 >
                   Subir otro archivo
                 </button>
@@ -472,16 +479,16 @@ export const PersonalFilesManager = () => {
           )}
         </div>
 
-        <div className="bg-gradient-to-br from-blue-900/20 to-violet-900/20 backdrop-blur-sm border border-blue-700/30 rounded-2xl p-8">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xl font-bold text-white flex items-center gap-2">
-              <File className="w-5 h-5" />
+        <div className="backdrop-blur-sm rounded-2xl border border-purple-700/30 bg-gradient-to-br from-purple-900/20 to-purple-800/10 p-8 lg:p-12 shadow-2xl shadow-purple-900/20">
+          <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
+            <h3 className="text-xl font-semibold text-white flex items-center gap-2">
+              <File className="w-5 h-5 text-purple-400" />
               Mis archivos ({files.length})
             </h3>
             <button
               onClick={loadPersonalFiles}
               disabled={loading}
-              className="px-4 py-2 bg-gray-700/50 text-white rounded-lg text-sm font-medium hover:bg-gray-700 transition-all flex items-center gap-2 disabled:opacity-50"
+              className="cursor-pointer px-4 py-2 bg-purple-900/30 text-white rounded-lg text-sm font-medium hover:bg-purple-900/50 transition-all flex items-center gap-2 disabled:opacity-50 border border-purple-700/30"
             >
               <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
               Actualizar
@@ -490,13 +497,13 @@ export const PersonalFilesManager = () => {
 
           {loading && files.length === 0 ? (
             <div className="flex justify-center items-center py-20">
-              <Loader2 className="w-8 h-8 text-blue-400 animate-spin" />
+              <Loader2 className="w-8 h-8 text-purple-400 animate-spin" />
             </div>
           ) : files.length === 0 ? (
             <div className="text-center py-12">
-              <File className="w-16 h-16 text-blue-400 mx-auto mb-4 opacity-50" />
-              <p className="text-blue-300 text-lg">No hay archivos aún</p>
-              <p className="text-blue-400 text-sm mt-2">
+              <File className="w-16 h-16 text-purple-400 mx-auto mb-4 opacity-50" />
+              <p className="text-purple-300 text-lg">No hay archivos aún</p>
+              <p className="text-slate-400 text-sm mt-2">
                 Sube tu primer archivo usando el formulario de arriba
               </p>
             </div>
@@ -505,55 +512,55 @@ export const PersonalFilesManager = () => {
               {files.map((file) => (
                 <div
                   key={file.id}
-                  className="bg-blue-900/10 border border-blue-700/30 rounded-xl p-6 hover:border-blue-500/50 transition-all"
+                  className="bg-purple-900/10 border border-purple-700/30 rounded-xl p-6 hover:border-purple-500/50 transition-all hover:shadow-lg hover:shadow-purple-900/20"
                 >
                   <div className="space-y-4">
                     <div className="flex items-start justify-between">
                       <div className="flex items-center gap-3 flex-1 min-w-0">
-                        <div className="w-10 h-10 bg-blue-900/30 rounded-lg flex items-center justify-center text-blue-400 flex-shrink-0">
+                        <div className="w-10 h-10 bg-purple-900/30 rounded-lg flex items-center justify-center text-purple-400 flex-shrink-0 border border-purple-700/30">
                           {getFileIcon(file.mimeType)}
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="text-white font-medium text-sm truncate">
                             {file.originalName}
                           </p>
-                          <p className="text-blue-400 text-xs mt-0.5">
+                          <p className="text-purple-400 text-xs mt-0.5">
                             {file.mimeType}
                           </p>
                         </div>
                       </div>
                     </div>
 
-                    <div className="space-y-2 pt-2 border-t border-blue-700/30">
+                    <div className="space-y-2 pt-2 border-t border-purple-700/30">
                       <div className="flex justify-between items-center text-xs">
-                        <span className="text-blue-300">Tamaño</span>
+                        <span className="text-purple-300">Tamaño</span>
                         <span className="text-white font-medium">
                           {formatFileSize(file.size)}
                         </span>
                       </div>
                       <div className="flex justify-between items-center text-xs">
-                        <span className="text-blue-300">Subido</span>
+                        <span className="text-purple-300">Subido</span>
                         <span className="text-white font-medium">
                           {formatDate(file.createdAt)}
                         </span>
                       </div>
                     </div>
 
-                    <div className="pt-2 border-t border-blue-700/30">
-                      <p className="text-xs text-blue-300 mb-2">URL pública</p>
-                      <div className="bg-blue-950/50 rounded-lg p-2 mb-3">
-                        <p className="text-blue-400 text-xs break-all line-clamp-2">
+                    <div className="pt-2 border-t border-purple-700/30">
+                      <p className="text-xs text-purple-300 mb-2">URL pública</p>
+                      <div className="bg-purple-950/50 rounded-lg p-2 mb-3 border border-purple-800/30">
+                        <p className="text-purple-400 text-xs break-all line-clamp-2">
                           {assembleFileUrl(file.id)}
                         </p>
                       </div>
                     </div>
 
-                    <div className="flex gap-2 pt-2 border-t border-blue-700/30">
+                    <div className="flex gap-2 pt-2 border-t border-purple-700/30">
                       <a
                         href={assembleFileUrl(file.id)}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex-1 px-3 py-2 bg-blue-600/50 text-white rounded-lg text-xs font-medium hover:bg-blue-600 transition-all flex items-center justify-center gap-2"
+                        className="flex-1 px-3 py-2 bg-gradient-to-r from-purple-700 to-purple-600 text-white rounded-lg text-xs font-medium hover:from-purple-600 hover:to-purple-500 transition-all flex items-center justify-center gap-2 shadow-lg shadow-purple-700/20"
                       >
                         <ExternalLink className="w-3 h-3" />
                         Ver
@@ -561,7 +568,7 @@ export const PersonalFilesManager = () => {
                       <button
                         onClick={() => handleDelete(file.id)}
                         disabled={deletingFileId === file.id}
-                        className="px-3 py-2 bg-red-900/30 text-red-300 rounded-lg text-xs font-medium hover:bg-red-900/50 transition-all flex items-center justify-center gap-2 disabled:opacity-50 border border-red-700/50"
+                        className="cursor-pointer px-3 py-2 bg-red-900/30 text-red-300 rounded-lg text-xs font-medium hover:bg-red-900/50 transition-all flex items-center justify-center gap-2 disabled:opacity-50 border border-red-700/50"
                       >
                         {deletingFileId === file.id ? (
                           <Loader2 className="w-3 h-3 animate-spin" />
