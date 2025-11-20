@@ -3,19 +3,25 @@
 import { useState, useRef, useCallback } from 'react';
 import { ArkaCDNClient, UploadResponse } from '@/lib/arka-cdn-client';
 import { assembleFileUrl } from '@/utils/url';
-import { Upload, CheckCircle2, ExternalLink, UploadCloud, X, Loader2 } from 'lucide-react';
+import { Upload, CheckCircle2, ExternalLink, UploadCloud, X, Loader2, FileText, File } from 'lucide-react';
 import Link from 'next/link';
 
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
 
+type UploadMode = 'file' | 'text';
+
 export const TryItNow = () => {
   const [client] = useState(() => new ArkaCDNClient(undefined, 'test'));
+  const [uploadMode, setUploadMode] = useState<UploadMode>('file');
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadResult, setUploadResult] = useState<UploadResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
+  const [plainTextData, setPlainTextData] = useState('');
+  const [plainTextFilename, setPlainTextFilename] = useState('data.txt');
+  const [isPlainTextJson, setIsPlainTextJson] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isAuthenticating, setIsAuthenticating] = useState(false);
 
@@ -94,10 +100,55 @@ export const TryItNow = () => {
     }
   };
 
+  const handleUploadPlainText = async () => {
+    if (!plainTextData.trim() || !plainTextFilename.trim()) {
+      setError('Por favor, ingresa datos y un nombre de archivo');
+      return;
+    }
+
+    const authenticated = await ensureAuthenticated();
+    if (!authenticated) return;
+
+    setIsUploading(true);
+    setError(null);
+    setUploadProgress(0);
+
+    try {
+      let dataToUpload: string | object = plainTextData;
+      if (isPlainTextJson) {
+        try {
+          dataToUpload = JSON.parse(plainTextData);
+        } catch {
+          throw new Error('El JSON no es válido');
+        }
+      }
+
+      const result = await client.uploadPlainText(
+        dataToUpload,
+        plainTextFilename,
+        `Uploaded from playground: ${plainTextFilename}`
+      );
+
+      setUploadResult(result);
+      setPlainTextData('');
+      setPlainTextFilename('data.txt');
+      setIsPlainTextJson(false);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      setError(err.message || 'Error al subir el texto');
+    } finally {
+      setIsUploading(false);
+      setUploadProgress(0);
+    }
+  };
+
   const handleUploadAnother = () => {
     setUploadResult(null);
     setSelectedFile(null);
     setUploadedFileName(null);
+    setPlainTextData('');
+    setPlainTextFilename('data.txt');
+    setIsPlainTextJson(false);
     setError(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
@@ -128,8 +179,46 @@ export const TryItNow = () => {
         </div>
 
         <div className="backdrop-blur-sm rounded-2xl border border-purple-700/30 bg-gradient-to-br from-purple-900/20 to-purple-800/10 p-8 lg:p-12 shadow-2xl shadow-purple-900/20">
+          <div className="flex gap-2 mb-6 border-b border-purple-700/30">
+            <button
+              onClick={() => {
+                setUploadMode('file');
+                setError(null);
+                setUploadResult(null);
+              }}
+              className={`px-4 py-2 text-sm font-medium transition-all ${
+                uploadMode === 'file'
+                  ? 'text-purple-400 border-b-2 border-purple-400'
+                  : 'text-purple-300/60 hover:text-purple-300'
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <File className="w-4 h-4" />
+                Subir archivo
+              </div>
+            </button>
+            <button
+              onClick={() => {
+                setUploadMode('text');
+                setError(null);
+                setUploadResult(null);
+              }}
+              className={`px-4 py-2 text-sm font-medium transition-all ${
+                uploadMode === 'text'
+                  ? 'text-purple-400 border-b-2 border-purple-400'
+                  : 'text-purple-300/60 hover:text-purple-300'
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <FileText className="w-4 h-4" />
+                Texto/JSON
+              </div>
+            </button>
+          </div>
+
           {!uploadResult ? (
             <>
+              {uploadMode === 'file' ? (
               <div
                 className={`border-2 border-dashed rounded-xl p-12 text-center transition-all duration-300 ${
                   isUploading
@@ -237,6 +326,70 @@ export const TryItNow = () => {
                   </div>
                 )}
               </div>
+
+              ) : (
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm text-purple-300 mb-2">
+                      Nombre del archivo
+                    </label>
+                    <input
+                      type="text"
+                      value={plainTextFilename}
+                      onChange={(e) => setPlainTextFilename(e.target.value)}
+                      placeholder="data.txt o config.json"
+                      className="w-full px-4 py-2 bg-purple-950/50 border border-purple-700/30 rounded-lg text-white placeholder-purple-400/50 focus:outline-none focus:border-purple-500"
+                      disabled={isUploading || isAuthenticating}
+                    />
+                  </div>
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <label className="block text-sm text-purple-300">
+                        Contenido
+                      </label>
+                      <label className="flex items-center gap-2 text-xs text-purple-400 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={isPlainTextJson}
+                          onChange={(e) => setIsPlainTextJson(e.target.checked)}
+                          className="rounded"
+                          disabled={isUploading || isAuthenticating}
+                        />
+                        Es JSON
+                      </label>
+                    </div>
+                    <textarea
+                      value={plainTextData}
+                      onChange={(e) => setPlainTextData(e.target.value)}
+                      placeholder={isPlainTextJson ? '{"key": "value"}' : 'Escribe tu texto aquí...'}
+                      rows={10}
+                      className="w-full px-4 py-2 bg-purple-950/50 border border-purple-700/30 rounded-lg text-white placeholder-purple-400/50 focus:outline-none focus:border-purple-500 font-mono text-sm"
+                      disabled={isUploading || isAuthenticating}
+                    />
+                  </div>
+                  <div className="flex gap-3 justify-center">
+                    <button
+                      onClick={handleUploadPlainText}
+                      disabled={isUploading || isAuthenticating || !plainTextData.trim()}
+                      className="cursor-pointer px-6 py-3 bg-gradient-to-r from-purple-700 to-purple-600 text-white rounded-xl font-medium hover:from-purple-600 hover:to-purple-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-lg shadow-purple-700/30"
+                    >
+                      <UploadCloud className="w-5 h-5" />
+                      {isUploading ? 'Subiendo...' : isAuthenticating ? 'Autenticando...' : 'Subir texto'}
+                    </button>
+                    <button
+                      onClick={() => {
+                        setPlainTextData('');
+                        setPlainTextFilename('data.txt');
+                        setIsPlainTextJson(false);
+                      }}
+                      className="cursor-pointer px-6 py-3 bg-gray-700/50 text-white rounded-xl font-medium hover:bg-gray-700 transition-all"
+                      disabled={isUploading || isAuthenticating}
+                    >
+                      Limpiar
+                    </button>
+                  </div>
+                </div>
+              )}
 
               {error && (
                 <div className="mt-6 bg-red-900/20 border border-red-700/50 rounded-lg p-4 flex items-start gap-3">
