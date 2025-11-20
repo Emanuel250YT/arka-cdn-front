@@ -139,6 +139,7 @@ export const PersonalFilesManager = () => {
     setUserProfile(null);
     setFiles([]);
     setShowTokens(false);
+    window.location.replace("/")
   };
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
